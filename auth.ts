@@ -16,9 +16,18 @@ export const config = {
             if (pathname === "/middleware-example") return !!auth
             return true
         },
-        jwt({ token, trigger, session }) {
-            if (trigger === "update") token.name = session.user.name
+        jwt({ token, trigger, session, user }) {
+            if (trigger === "update") {
+                token.name = session.user.name
+            }
+            if (user) {
+                token.id = user.id
+            }
             return token
+        },
+        session({ session, token }) {
+            session.user.id = token.id as string;
+            return session
         },
     },
 } satisfies NextAuthConfig
