@@ -6,13 +6,11 @@ env:
   DATABASE_URL: ${{ secrets.DATABASE_POOLED_URL }}
   DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
 
-on:
-  push:
-    branches:
-      - main
+on: push
 
 jobs:
   deploy-production:
+    needs: deploy-preview
     runs-on: ubuntu-latest
     environment: production
     steps:
