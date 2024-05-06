@@ -1,11 +1,14 @@
 import NextAuth from "next-auth"
-
 import GitHub from "next-auth/providers/github"
-
 import type { NextAuthConfig } from "next-auth"
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient()
 
 export const config = {
     theme: { logo: "https://authjs.dev/img/logo-sm.png" },
+    adapter: PrismaAdapter(prisma),
     providers: [
         GitHub,
     ],
@@ -20,13 +23,9 @@ export const config = {
             if (trigger === "update") {
                 token.name = session.user.name
             }
-            if (user) {
-                token.id = user.id
-            }
             return token
         },
         session({ session, token }) {
-            session.user.id = token.id as string;
             return session
         },
     },
