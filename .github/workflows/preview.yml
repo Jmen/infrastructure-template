@@ -3,6 +3,8 @@ name: Vercel Preview Deployment
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  DATABASE_URL: ${{ secrets.DATABASE_POOLED_URL }}
+  DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
 
 on:
   push:
@@ -15,6 +17,11 @@ jobs:
     steps:
 
       - uses: actions/checkout@v4
+
+      - name: Run Prisma Migrate
+        run: |
+          npx prisma generate
+          npx prisma migrate deploy
 
       - name: Install Vercel CLI
         run: npm install --global vercel
