@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "database:migrations:sync": "prisma migrate dev",
-    "database:migrations:deploy": "prisma migrate deploy"
+    "database:migrations:deploy": "prisma migrate deploy",
+    "postinstall": "prisma generate",
+    "postinstall-comment": "echo https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/vercel-caching-issue"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.0.0",
