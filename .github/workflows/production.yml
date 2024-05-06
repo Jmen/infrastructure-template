@@ -6,11 +6,15 @@ env:
   DATABASE_URL: ${{ secrets.DATABASE_POOLED_URL }}
   DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
 
-on: push
+on:
+  workflow_run:
+    workflows: ["preview"]
+    types:
+      - completed
 
 jobs:
   deploy-production:
-    needs: deploy-preview
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     environment: production
     steps:
