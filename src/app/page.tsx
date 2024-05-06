@@ -5,7 +5,7 @@ import {SignOut} from "../../components/SignOut";
 export default async function Home() {
     const session = await auth();
     return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between p-12">
         <div className="flex flex-col gap-6">
             <SignIn/>
             <div className="flex flex-col rounded-md bg-neutral-100">
