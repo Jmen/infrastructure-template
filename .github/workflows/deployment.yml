@@ -33,8 +33,17 @@ jobs:
       - name: Deploy Project Artifacts
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
+  test-preview:
+    runs-on: ubuntu-latest
+    environment: preview
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Tests
+        run: npm run test
+
   deploy-production:
-    needs: deploy-preview
+    needs: test-preview
     runs-on: ubuntu-latest
     environment: production
     steps:
