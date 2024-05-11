@@ -1,6 +1,7 @@
-import { SignIn } from "../../components/SignIn";
-import { auth } from "auth"
-import {SignOut} from "../../components/SignOut";
+import { SignIn } from "@/components/buttons/SignIn";
+import { auth } from "@/auth";
+import { SignOut } from "@/components/buttons/SignOut";
+import Notes from "@/components/notes/notes";
 
 export default async function Home() {
     const session = await auth();
@@ -18,6 +19,7 @@ export default async function Home() {
             </div>
             <SignOut/>
         </div>
+        <Notes/>
     </main>
     );
 }
