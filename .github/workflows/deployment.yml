@@ -44,7 +44,7 @@ jobs:
       - name: Run Tests
         run: |
           npm install
-          npx run test
+          npm run test
 
   deploy-production:
     needs: test-preview
