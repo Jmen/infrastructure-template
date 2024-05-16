@@ -8,9 +8,11 @@ type Note = {
 
 export default async function Notes() {
 
-    const notes: Note[] = await fetch('http://localhost:3000/api/notes', {
+    const notes: Note[] = await fetch('/api/notes', {
         cache: 'no-cache',
-    }).then((res) => res.json());
+    })
+    .then((res) => res.json())
+    .catch(() => []);
 
     return (
         <div className="flex flex-col items-center gap-5">
