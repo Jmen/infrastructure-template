@@ -1,4 +1,5 @@
 import Note from "@/components/notes/note";
+import { baseUrl } from "@/lib/config/config";
 
 type Note = {
     id: string;
@@ -8,7 +9,7 @@ type Note = {
 
 export default async function Notes() {
 
-    const notes: Note[] = await fetch('/api/notes', {
+    const notes: Note[] = await fetch(`${baseUrl}/api/notes`, {
         cache: 'no-cache',
     })
     .then((res) => res.json())

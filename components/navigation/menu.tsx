@@ -5,7 +5,7 @@ export default function Menu() {
         <nav>
         <ul className="flex flex-row justify-center gap-5 m-5">
             <li>
-                <Link href="/public">Home</Link>
+                <Link href="/">Home</Link>
             </li>
             <li>
                 <Link href="/notes/create">New +</Link>

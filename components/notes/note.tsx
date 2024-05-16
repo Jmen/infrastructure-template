@@ -13,12 +13,12 @@ interface Props {
 export default function Note({ id, title, description }: Props) {
     const router = useRouter();
 
-    const editClick = async () => {
-        await router.push(`/notes/${id}/edit`);
+    const editClick = () => {
+        router.push(`/notes/${id}/edit`);
     }
 
-    const deleteClick = async () => {
-        await router.push(`/notes/${id}/delete`);
+    const deleteClick = () => {
+        router.push(`/notes/${id}/delete`);
     }
 
     return (
