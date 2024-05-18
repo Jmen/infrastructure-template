@@ -19,6 +19,7 @@ export default async function Notes() {
 
     return (
         <div className="flex flex-col items-center gap-5">
+            <p>Base URL - {baseUrl}</p>
             <ul className="grid grid-cols-4 gap-4">
                 {notes.map((note) => {
                     return <Note
