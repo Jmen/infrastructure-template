@@ -9,6 +9,8 @@ type Note = {
 
 export default async function Notes() {
 
+    console.log('baseUrl', baseUrl);
+
     const notes: Note[] = await fetch(`${baseUrl}/api/notes`, {
         cache: 'no-cache',
     })
