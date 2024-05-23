@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma/prisma";
+import { auth } from "@/auth";
 
 export async function GET(request: NextRequest) {
+    const session = await auth();
+
+    if (!session?.user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     const skip = parseInt(request.nextUrl.searchParams.get('skip') ?? '0') || 0;
     const take = parseInt(request.nextUrl.searchParams.get('take') ?? '10') || 10;
@@ -10,6 +16,9 @@ export async function GET(request: NextRequest) {
     const notes = await prisma.note.findMany({
         orderBy: {
             updatedAt: 'desc'
+        },
+        where: {
+            userId: session.user.id
         },
         skip,
         take
@@ -19,15 +28,22 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+    const session = await auth();
+
+    if (!session?.user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const data = await request.json();
 
-    const noteDraft = {
+    const draftNote = {
+        userId: session.user.id,
         title: data.title,
         description: data.description,
     }
 
     const note = await prisma.note.create({
-        data: noteDraft,
+        data: draftNote,
     });
 
     return NextResponse.json(note);

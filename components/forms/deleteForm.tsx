@@ -1,17 +1,39 @@
 "use client";
 
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import { baseUrl } from "@/lib/config/config";
 
 interface Props {
     id: string;
-    title: string;
-    description: string;
 }
 
-export default function DeleteForm({ id, title, description }: Props) {
+type NoteEntity = {
+    id: string;
+    userId: string;
+    title: string;
+    description: string;
+};
+
+export default function DeleteForm({ id, }: Props) {
     const router = useRouter();
+
+    const [data, setData] = useState(null)
+    const [isLoading, setLoading] = useState(true)
+
+    useEffect(() => {
+        fetch(`${baseUrl}/api/notes/${id}`)
+            .then((res) => res.json())
+            .then((data) => {
+                setData(data)
+                setLoading(false)
+            })
+    }, [])
+
+    if (isLoading) return <p>Loading...</p>
+    if (!data) return <p>No data</p>
+
+    const note = data as NoteEntity;
 
     const deleteNote = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -35,14 +57,14 @@ export default function DeleteForm({ id, title, description }: Props) {
                     className="border-solid border-2 border-black-600"
                     type="text"
                     name="title"
-                    value={title}
+                    value={note.title}
                 />
 
                 <label htmlFor="description">Description</label>
                 <textarea
                     className="border-solid border-2 border-black-600 h-60"
                     name="description"
-                    value={description}
+                    value={note.description}
                 />
 
                 <button

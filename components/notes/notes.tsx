@@ -1,18 +1,33 @@
+'use client';
+
 import Note from "@/components/notes/note";
 import { baseUrl } from "@/lib/config/config";
+import { useEffect, useState } from "react";
 
-type Note = {
+type NoteEntity = {
     id: string;
+    userId: string;
     title: string;
     description: string;
 };
 
-export default async function Notes() {
-    const notes: Note[] = await fetch(`${baseUrl}/api/notes`, {
-        cache: 'no-cache',
-    })
-    .then((res) => res.json())
-    .catch(() => []);
+export default function Notes() {
+    const [data, setData] = useState(null)
+    const [isLoading, setLoading] = useState(true)
+
+    useEffect(() => {
+        fetch(`${baseUrl}/api/notes`)
+            .then((res) => res.json())
+            .then((data) => {
+                setData(data)
+                setLoading(false)
+            })
+    }, [])
+
+    if (isLoading) return <p>Loading...</p>
+    if (!data) return <p>No data</p>
+
+    const notes = data as NoteEntity[];
 
     return (
         <div className="flex flex-col items-center gap-5">

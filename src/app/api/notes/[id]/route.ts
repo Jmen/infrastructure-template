@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma/prisma";
+import {auth} from "@/auth";
 
 interface Props {
     params: {
@@ -8,11 +9,18 @@ interface Props {
 }
 
 export async function GET(request: NextRequest, { params }: Props) {
+    const session = await auth();
+
+    if (!session?.user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const id = params.id;
 
     const note = await prisma.note.findFirst({
         where: {
-            id
+            id,
+            userId: session.user.id
         }
     })
 
@@ -20,13 +28,20 @@ export async function GET(request: NextRequest, { params }: Props) {
 }
 
 export async function POST(request: NextRequest, { params }: Props) {
+    const session = await auth();
+
+    if (!session?.user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const id = params.id;
 
     const body = JSON.parse(await request.text());
 
     const note = await prisma.note.update({
         where: {
-            id
+            id,
+            userId: session.user.id
         },
         data: {
             ...body
@@ -37,11 +52,18 @@ export async function POST(request: NextRequest, { params }: Props) {
 }
 
 export async function DELETE(request: NextRequest, { params }: Props) {
+    const session = await auth();
+
+    if (!session?.user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const id = params.id;
 
     await prisma.note.delete({
         where: {
-            id
+            id,
+            userId: session.user.id
         }
     })
 

@@ -8,7 +8,13 @@ export default async function Home() {
     return (
     <main className="flex min-h-screen flex-col items-center justify-between p-12">
         <div className="flex flex-col gap-5">
-            <Notes/>
+            { session?.user ?
+                <>
+                    <h1>Welcome, {session.user.name} </h1>
+                    <Notes/>
+                </> :
+                <></>
+            }
             <div className="flex flex-row gap-5">
                 <SignIn/>
                 <SignOut/>
