@@ -24,6 +24,8 @@ export async function GET(request: NextRequest) {
         take
     })
 
+    console.log(JSON.stringify(notes, null, 2));
+
     return NextResponse.json(notes);
 }
 
