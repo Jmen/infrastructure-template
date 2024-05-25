@@ -52,3 +52,13 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(note);
 }
+
+export async function PUT(request: NextRequest) {
+    console.log('Not Implemented');
+    return NextResponse.json({ message: 'hello' }, { status: 501 });
+}
+
+export async function DELETE(request: NextRequest) {
+    console.log('Not Implemented');
+    throw new Error('Not Implemented');
+}
