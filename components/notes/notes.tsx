@@ -19,10 +19,13 @@ export default function Notes() {
     useEffect(() => {
         fetch(`${baseUrl}/api/notes`)
             .then((res) => res.json())
-            .catch((error) => setError(error))
+            .catch((error) => {
+                setError(error);
+                console.log(error);
+            })
             .then((data) => {
-                setData(data)
-                setLoading(false)
+                setData(data);
+                setLoading(false);
             })
     }, [])
 
