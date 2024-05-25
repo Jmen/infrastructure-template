@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma/prisma";
 import { auth } from "@/auth";
 
 export async function GET(request: NextRequest) {
+    console.log("Notes Endpoint", "Request Received");
+
     const session = await auth();
 
     if (!session?.user) {
