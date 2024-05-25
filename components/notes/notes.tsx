@@ -21,6 +21,7 @@ export default function Notes() {
             .then((data) => {
                 setData(data)
                 setLoading(false)
+                console.log("Notes Component", data)
             })
     }, [])
 
