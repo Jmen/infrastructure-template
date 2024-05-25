@@ -14,19 +14,21 @@ type NoteEntity = {
 export default function Notes() {
     const [data, setData] = useState(null)
     const [isLoading, setLoading] = useState(true)
+    const [errorResponse, setError] = useState(null)
 
     useEffect(() => {
         fetch(`${baseUrl}/api/notes`)
             .then((res) => res.json())
+            .catch((error) => setError(error))
             .then((data) => {
                 setData(data)
                 setLoading(false)
-                console.log("Notes Component", data)
             })
     }, [])
 
+    if (errorResponse) return <p>Error: {JSON.stringify(errorResponse, null, 2)}</p>
     if (isLoading) return <p>Loading...</p>
-    if (!data) return <p>No data</p>
+    if (!data) return <p>No Notes</p>
 
     const notes = data as NoteEntity[];
 
