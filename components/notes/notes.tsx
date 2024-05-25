@@ -1,8 +1,8 @@
 'use client';
 
-import Note from "@/components/notes/note";
-import { baseUrl } from "@/lib/config/config";
 import { useEffect, useState } from "react";
+import Note from "@/components/notes/note";
+import { baseUrl, showErrors } from "@/lib/config/config";
 
 type NoteEntity = {
     id: string;
@@ -12,6 +12,7 @@ type NoteEntity = {
 };
 
 export default function Notes() {
+
     const [data, setData] = useState(null)
     const [isLoading, setLoading] = useState(true)
     const [errorResponse, setError] = useState(null)
@@ -21,7 +22,9 @@ export default function Notes() {
             .then((res) => res.json())
             .catch((error) => {
                 setError(error);
-                console.log(error);
+                if (showErrors()) {
+                    console.error(error);
+                }
             })
             .then((data) => {
                 setData(data);
@@ -29,7 +32,7 @@ export default function Notes() {
             })
     }, [])
 
-    if (errorResponse) return <p>Error: {JSON.stringify(errorResponse, null, 2)}</p>
+    if (errorResponse) return <p>Loading Failed</p>
     if (isLoading) return <p>Loading...</p>
     if (!data) return <p>No Notes</p>
 

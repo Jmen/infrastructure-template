@@ -8,7 +8,7 @@ export default async function Menu() {
 
     return (
         <nav>
-        <ul className="flex flex-row justify-center gap-5 m-5">
+        <ul className="flex flex-row justify-center items-center gap-5 m-5">
             <li>
                 <Link href="/">Home</Link>
             </li>

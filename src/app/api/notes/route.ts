@@ -4,8 +4,6 @@ import { prisma } from "@/lib/prisma/prisma";
 import { auth } from "@/auth";
 
 export async function GET(request: NextRequest) {
-    console.log("Notes Endpoint", "Request Received");
-
     const session = await auth();
 
     if (!session?.user) {
@@ -25,9 +23,7 @@ export async function GET(request: NextRequest) {
         skip,
         take
     })
-
-    console.log("Notes Endpoint", JSON.stringify(notes, null, 2));
-
+    
     return NextResponse.json(notes);
 }
 
