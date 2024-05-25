@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
-import { baseUrl } from "@/lib/config/config";
+import { baseUrl, showErrors } from "@/lib/config/config";
 
 interface Props {
     id: string;
@@ -20,16 +20,24 @@ export default function EditForm({ id }: Props) {
 
     const [data, setData] = useState(null)
     const [isLoading, setLoading] = useState(true)
+    const [errorResponse, setError] = useState(null)
 
     useEffect(() => {
         fetch(`${baseUrl}/api/notes/${id}`)
             .then((res) => res.json())
+            .catch((error) => {
+                setError(error);
+                if (showErrors()) {
+                    console.error(error);
+                }
+            })
             .then((data) => {
                 setData(data)
                 setLoading(false)
             })
     }, [])
 
+    if (errorResponse) return <p>Loading Failed</p>
     if (isLoading) return <p>Loading...</p>
     if (!data) return <p>No data</p>
 
