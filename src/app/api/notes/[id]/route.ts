@@ -38,10 +38,6 @@ export async function POST(request: NextRequest, { params }: Props) {
 
     const body = JSON.parse(await request.text());
 
-    console.log('user_id', decodedToken.uid);
-    console.log('ID', id);
-    console.log('Body', body);
-
     const note = await prisma.note.update({
         where: {
             id,

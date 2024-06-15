@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-
 import { prisma } from "@/lib/prisma/prisma";
 import { getDecodedToken } from "@/lib/firebase-admin/token";
 
