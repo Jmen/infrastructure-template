@@ -1,8 +1,9 @@
 "use client";
 
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {baseUrl, showErrors} from "@/lib/config/config";
+import { baseUrl, showErrors } from "@/lib/config/config";
+import { getAuthHeaders } from "@/lib/firebase-public/auth";
 
 interface Props {
     id: string;
@@ -23,19 +24,21 @@ export default function DeleteForm({ id, }: Props) {
     const [errorResponse, setError] = useState(null)
 
     useEffect(() => {
-        fetch(`${baseUrl}/api/notes/${id}`)
-            .then((res) => res.json())
-            .catch((error) => {
-                setError(error);
-                if (showErrors()) {
-                    console.error(error);
-                }
-            })
-            .then((data) => {
-                setData(data)
-                setLoading(false)
-            })
-    }, [])
+        getAuthHeaders().then((headers) => {
+            fetch(`${baseUrl}/api/notes/${id}`, { headers })
+                .then((res) => res.json())
+                .catch((error) => {
+                    setError(error);
+                    if (showErrors()) {
+                        console.error(error);
+                    }
+                })
+                .then((data) => {
+                    setData(data)
+                    setLoading(false)
+                })
+        });
+    }, [id])
 
     if (errorResponse) return <p>Loading Failed</p>
     if (isLoading) return <p>Loading...</p>
@@ -46,7 +49,10 @@ export default function DeleteForm({ id, }: Props) {
     const deleteNote = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        const headers = await getAuthHeaders();
+
         const res = await fetch(`${baseUrl}/api/notes/${id}`, {
+            headers,
             method: 'DELETE'
         });
 

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from 'next/navigation';
+import { getAuthHeaders } from "@/lib/firebase-public/auth";
 
 export default function Create() {
 
@@ -17,12 +18,13 @@ export default function Create() {
             description: formData.get('description'),
         };
 
+        const headers = await getAuthHeaders();
+        headers.append('Content-Type', 'application/json');
+
         const res = await fetch('/api/notes', {
             method: 'POST',
             body: JSON.stringify(body),
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers
         });
 
         await res.json();

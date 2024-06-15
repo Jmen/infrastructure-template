@@ -1,11 +1,8 @@
 import Link from "next/link";
 import { SignOut } from "@/components/buttons/SignOut";
 import { SignIn } from "@/components/buttons/SignIn";
-import { auth } from "@/auth";
 
 export default async function Menu() {
-    const session = await auth();
-
     return (
         <nav>
         <ul className="flex flex-row justify-center items-center gap-5 m-5">
@@ -16,7 +13,10 @@ export default async function Menu() {
                 <Link href="/notes/create">New +</Link>
             </li>
             <li>
-                { session?.user ? <SignOut/> : <SignIn/> }
+                <SignIn/>
+            </li>
+            <li>
+                <SignOut/>
             </li>
         </ul>
         </nav>

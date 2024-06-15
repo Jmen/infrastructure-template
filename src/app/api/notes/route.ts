@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma/prisma";
-import { auth } from "@/auth";
+import { getDecodedToken } from "@/lib/firebase-admin/token";
 
 export async function GET(request: NextRequest) {
-    const session = await auth();
+    const decodedToken = await getDecodedToken(request);
 
-    if (!session?.user) {
+    if (!decodedToken) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -15,10 +15,10 @@ export async function GET(request: NextRequest) {
 
     const notes = await prisma.note.findMany({
         orderBy: {
-            updatedAt: 'desc'
+            updated: 'desc'
         },
         where: {
-            userId: session.user.id
+            user_id: decodedToken.uid
         },
         skip,
         take
@@ -28,16 +28,16 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-    const session = await auth();
+    const decodedToken = await getDecodedToken(request);
 
-    if (!session?.user) {
+    if (!decodedToken) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const data = await request.json();
 
     const draftNote = {
-        userId: session.user.id,
+        user_id: decodedToken.uid,
         title: data.title,
         description: data.description,
     }

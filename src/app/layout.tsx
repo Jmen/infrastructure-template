@@ -10,17 +10,13 @@ export const metadata: Metadata = {
   description: "Example Infrastructure Template - Notes App",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Menu />
-        {children}
-      </body>
-    </html>
-  );
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+    return (
+        <html lang="en">
+            <body className={inter.className}>
+                <Menu/>
+                {children}
+            </body>
+        </html>
+    );
 }

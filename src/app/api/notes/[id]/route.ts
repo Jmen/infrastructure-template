@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma/prisma";
-import {auth} from "@/auth";
+import { getDecodedToken } from "@/lib/firebase-admin/token";
 
 interface Props {
     params: {
@@ -9,9 +9,9 @@ interface Props {
 }
 
 export async function GET(request: NextRequest, { params }: Props) {
-    const session = await auth();
+    const decodedToken = await getDecodedToken(request);
 
-    if (!session?.user) {
+    if (!decodedToken) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest, { params }: Props) {
     const note = await prisma.note.findFirst({
         where: {
             id,
-            userId: session.user.id
+            user_id: decodedToken.uid
         }
     })
 
@@ -28,9 +28,9 @@ export async function GET(request: NextRequest, { params }: Props) {
 }
 
 export async function POST(request: NextRequest, { params }: Props) {
-    const session = await auth();
+    const decodedToken = await getDecodedToken(request);
 
-    if (!session?.user) {
+    if (!decodedToken) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -38,10 +38,14 @@ export async function POST(request: NextRequest, { params }: Props) {
 
     const body = JSON.parse(await request.text());
 
+    console.log('user_id', decodedToken.uid);
+    console.log('ID', id);
+    console.log('Body', body);
+
     const note = await prisma.note.update({
         where: {
             id,
-            userId: session.user.id
+            user_id: decodedToken.uid
         },
         data: {
             ...body
@@ -52,9 +56,9 @@ export async function POST(request: NextRequest, { params }: Props) {
 }
 
 export async function DELETE(request: NextRequest, { params }: Props) {
-    const session = await auth();
+    const decodedToken = await getDecodedToken(request);
 
-    if (!session?.user) {
+    if (!decodedToken) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -63,7 +67,7 @@ export async function DELETE(request: NextRequest, { params }: Props) {
     await prisma.note.delete({
         where: {
             id,
-            userId: session.user.id
+            user_id: decodedToken.uid
         }
     })
 
