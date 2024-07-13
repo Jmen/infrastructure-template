@@ -10,3 +10,4 @@ The project will give the follow capabilities:
 - Tests (Jest)
 - CI/CD (GitHub Actions)
 - Hosting & Preview Environment (Vercel)
+
