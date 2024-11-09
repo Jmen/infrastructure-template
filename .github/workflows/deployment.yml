@@ -7,9 +7,9 @@ env:
 on: push
 
 jobs:
-  deploy-preview:
+  deploy-test:
     runs-on: ubuntu-latest
-    environment: preview
+    environment: test
     steps:
 
       - uses: actions/checkout@v4
@@ -18,7 +18,7 @@ jobs:
         run: npm install --global vercel
 
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build Project Artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
@@ -27,7 +27,7 @@ jobs:
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
   deploy-production:
-    needs: deploy-preview
+    needs: deploy-test
     runs-on: ubuntu-latest
     environment: production
     steps:
