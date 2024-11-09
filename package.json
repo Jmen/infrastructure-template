@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test:unit": "jest app",
-    "test:acceptance": "jest acceptance"
+    "test:acceptance": "jest acceptance",
+    "pre-commit": "next lint && npm run test:unit && next build"
   },
   "dependencies": {
     "next": "15.0.3",
