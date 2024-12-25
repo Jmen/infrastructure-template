@@ -13,8 +13,6 @@ export default function UserDetails() {
         client.auth.getSession().then((session) => {
             const email = session?.data?.session?.user?.email;
 
-            console.log(JSON.stringify(session, null, 2));
-
             if (email) {
                 setEmail(session?.data.session?.user.email);
             } else {
