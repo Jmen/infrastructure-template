@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "npm run test:unit && next build",
     "start": "next start",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
     "lint": "next lint",
     "test:unit": "jest app",
     "test:acceptance": "npx playwright test",
@@ -41,6 +43,7 @@
     "eslint-config-next": "15.0.3",
     "jest": "^29.7.0",
     "postcss": "^8",
+    "supabase": "^2.1.1",
     "tailwindcss": "^3.4.1",
     "ts-jest": "^29.2.5",
     "typescript": "^5"
