@@ -41,19 +41,15 @@ export function ForgotPasswordForm() {
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        try {
-            const result = await forgotPasswordAction(values.email);
-            
-            if (result.error) {
-                setError(result.error);
-                return;
-            }
+        const result = await forgotPasswordAction(values.email);
 
-            setError(null);
-            setSuccess(true);
-        } catch (err) {
-            setError("Failed to send reset password email. Please try again.");
+        if (result.error) {
+            setError(result.error);
+            return;
         }
+
+        setError(null);
+        setSuccess(true);
     }
 
     if (success) {
@@ -76,7 +72,7 @@ export function ForgotPasswordForm() {
             <CardHeader>
                 <CardTitle>Reset Password</CardTitle>
                 <CardDescription>
-                    Enter your email address and we'll send you a link to reset your password.
+                    Enter your email address and we&apos;ll send you a link to reset your password.
                 </CardDescription>
             </CardHeader>
             <CardContent>
