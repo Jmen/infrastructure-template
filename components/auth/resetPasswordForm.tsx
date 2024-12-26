@@ -57,23 +57,19 @@ export function ResetPasswordForm() {
             return;
         }
 
-        try {
-            const result = await resetPasswordAction(values.password);
-            
-            if (result.error) {
-                setError(result.error);
-                return;
-            }
-
-            setError(null);
-            setSuccess(true);
-            
-            setTimeout(() => {
-                router.push('/');
-            }, 2000);
-        } catch (err) {
-            setError("Failed to reset password. Please try again.");
+        const result = await resetPasswordAction(values.password);
+        
+        if (result.error) {
+            setError(result.error);
+            return;
         }
+
+        setError(null);
+        setSuccess(true);
+        
+        setTimeout(() => {
+            router.push('/');
+        }, 2000);
     }
 
     if (success) {
