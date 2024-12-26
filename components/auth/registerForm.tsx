@@ -3,7 +3,6 @@
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
@@ -15,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { signUpAction} from "@/actions/auth";
 import { useState } from "react";
+import { DebouncedButton } from '../debouncedButton';
 
 const formSchema = z.object({
     email: z.string()
@@ -44,9 +44,8 @@ export function RegisterForm() {
             setError(result.error);
         } else {
             setError(null);
+            setShowConfirmation(true);
         }
-
-        setShowConfirmation(true);
     }
 
     if (showConfirmation) {
@@ -86,7 +85,9 @@ export function RegisterForm() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Create Account</Button>
+                <DebouncedButton type="submit" onDebouncedClick={form.handleSubmit(onSubmit)}>
+                    Create Account
+                </DebouncedButton>
             </form>
             {error && <p className="text-red-500 p-6">{error}</p>}
         </Form>

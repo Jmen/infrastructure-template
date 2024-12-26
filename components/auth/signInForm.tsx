@@ -3,7 +3,6 @@
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
@@ -14,7 +13,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { signInAction } from "@/actions/auth";
-import {useState} from "react";
+import { useState } from "react";
+import { DebouncedButton } from '../debouncedButton';
 
 const formSchema = z.object({
     email: z.string()
@@ -75,7 +75,9 @@ export function SignInForm() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Sign In</Button>
+                <DebouncedButton type="submit" onDebouncedClick={form.handleSubmit(onSubmit)}>
+                    Sign In
+                </DebouncedButton>
             </form>
             {error && <p className="text-red-500 p-6">{error}</p>}
         </Form>
