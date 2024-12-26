@@ -46,3 +46,17 @@ export const signOutAction = async () => {
 
     return redirect("/");
 };
+
+export async function resetPasswordAction(newPassword: string) {
+    const supabase = await createClient();
+    
+    const { error } = await supabase.auth.updateUser({
+        password: newPassword
+    });
+
+    if (error) {
+        return { error: error.message };
+    }
+
+    return { success: true };
+}
