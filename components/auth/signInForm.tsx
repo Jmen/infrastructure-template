@@ -16,6 +16,7 @@ import { signInAction } from "@/actions/auth";
 import { useState } from "react";
 import { DebouncedButton } from '../debouncedButton';
 import { redirect } from "next/navigation";
+import Link from "next/link"
 
 const formSchema = z.object({
     email: z.string()
@@ -74,6 +75,12 @@ export function SignInForm() {
                                 <Input type="password" {...field} />
                             </FormControl>
                             <FormMessage />
+                            <Link 
+                                href="/auth/forgot-password" 
+                                className="text-sm text-muted-foreground hover:text-primary"
+                            >
+                                Forgot your password?
+                            </Link>
                         </FormItem>
                     )}
                 />
