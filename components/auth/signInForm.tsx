@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input"
 import { signInAction } from "@/actions/auth";
 import { useState } from "react";
 import { DebouncedButton } from '../debouncedButton';
+import { redirect } from "next/navigation";
 
 const formSchema = z.object({
     email: z.string()
@@ -43,6 +44,7 @@ export function SignInForm() {
             setError(result.error);
         } else {
             setError(null);
+            redirect("/account");
         }
     }
 
