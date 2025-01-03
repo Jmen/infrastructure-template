@@ -26,6 +26,9 @@ jobs:
       - name: Deploy Project Artifacts
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 
+      - name: Print BASE_URL
+        run: echo "Test environment BASE_URL is $BASE_URL"
+
   acceptance-tests-api:
     needs: deploy-test
     environment: test
@@ -86,3 +89,6 @@ jobs:
 
       - name: Deploy Project Artifacts
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Print BASE_URL
+        run: echo "Production environment BASE_URL is $BASE_URL"
