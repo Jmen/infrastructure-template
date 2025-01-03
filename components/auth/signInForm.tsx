@@ -13,10 +13,12 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { signInAction } from "@/actions/auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DebouncedButton } from '../debouncedButton';
 import { redirect } from "next/navigation";
 import Link from "next/link"
+import { GoogleSignIn } from "./googleSignIn"
+import { getAuthProvidersAction } from "@/actions/auth";
 
 const formSchema = z.object({
     email: z.string()
@@ -29,6 +31,11 @@ const formSchema = z.object({
 
 export function SignInForm() {
     const [error, setError] = useState<string | null>(null);
+    const [providers, setProviders] = useState<{ google: boolean }>({ google: false });
+
+    useEffect(() => {
+        getAuthProvidersAction().then(setProviders);
+    }, []);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -77,18 +84,27 @@ export function SignInForm() {
                             <FormMessage />
                             <Link 
                                 href="/auth/forgot-password" 
-                                className="text-sm text-muted-foreground hover:text-primary"
+                                className="text-sm text-muted-foreground hover:text-primary mt-2 block"
                             >
                                 Forgot your password?
                             </Link>
                         </FormItem>
                     )}
                 />
-                <DebouncedButton type="submit" onDebouncedClick={form.handleSubmit(onSubmit)}>
-                    Sign In
-                </DebouncedButton>
+                <div className="flex items-center gap-4">
+                    <DebouncedButton type="submit" onDebouncedClick={form.handleSubmit(onSubmit)}>
+                        Sign In
+                    </DebouncedButton>
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                </div>
+
+                {providers.google && (
+                    <>
+                        <div className="border-t" />
+                        <GoogleSignIn onError={setError} />
+                    </>
+                )}
             </form>
-            {error && <p className="text-red-500 p-6">{error}</p>}
         </Form>
     )
 }

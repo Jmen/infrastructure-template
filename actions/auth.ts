@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 
 export const signUpAction = async (email: string, password: string) => {
     const origin = (await headers()).get("origin");
+    const redirectOrigin = origin?.replace('127.0.0.1', 'localhost');
 
     const supabase = await createClient();
 
@@ -13,7 +14,7 @@ export const signUpAction = async (email: string, password: string) => {
         email,
         password,
         options: {
-            emailRedirectTo: `${origin}/api/auth/callback`,
+            emailRedirectTo: `${redirectOrigin}/api/auth/callback`,
         },
     });
 
@@ -63,10 +64,12 @@ export async function resetPasswordAction(newPassword: string) {
 
 export async function forgotPasswordAction(email: string) {
     const origin = (await headers()).get("origin");
+    const redirectOrigin = origin?.replace('127.0.0.1', 'localhost');
+    
     const supabase = await createClient();
     
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${origin}/api/auth/callback?redirect_to=/auth/reset-password`,
+        redirectTo: `${redirectOrigin}/api/auth/callback?next=/auth/reset-password`,
     });
 
     if (error) {
@@ -74,4 +77,34 @@ export async function forgotPasswordAction(email: string) {
     }
 
     return { success: true };
+}
+
+export async function signInWithGoogleAction() {
+    const origin = (await headers()).get("origin");
+    const redirectOrigin = origin?.replace('127.0.0.1', 'localhost');
+    
+    const supabase = await createClient();
+    
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: `${redirectOrigin}/api/auth/callback?next=/account`,
+            queryParams: {
+                prompt: 'select_account',
+                access_type: 'offline'
+            }
+        },
+    });
+
+    if (error) {
+        return { error: error.message };
+    }
+
+    return { url: data.url };
+}
+
+export async function getAuthProvidersAction() {
+    return {
+        google: process.env.USE_GOOGLE_AUTH === "true"
+    };
 }

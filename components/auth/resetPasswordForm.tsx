@@ -19,7 +19,6 @@ import { useRouter } from "next/navigation"
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
@@ -92,9 +91,6 @@ export function ResetPasswordForm() {
         <Card className="w-[400px]">
             <CardHeader>
                 <CardTitle>Reset Password</CardTitle>
-                <CardDescription>
-                    Enter your new password below.
-                </CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
