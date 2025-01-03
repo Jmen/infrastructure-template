@@ -1,12 +1,10 @@
 "use server";
 
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { headers } from "next/headers";
 
 export const signUpAction = async (email: string, password: string) => {
     const supabase = await createClient();
-
     const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
@@ -16,7 +14,7 @@ export const signUpAction = async (email: string, password: string) => {
         return { error: signUpError.message };
     }
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
     });
@@ -24,12 +22,18 @@ export const signUpAction = async (email: string, password: string) => {
     if (signInError) {
         return { error: signInError.message };
     }
+
+    return { 
+        session: {
+            access_token: data.session?.access_token,
+            refresh_token: data.session?.refresh_token,
+        }
+    };
 };
 
 export const signInAction = async (email: string, password: string) => {
     const supabase = await createClient();
-
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
     });
@@ -37,22 +41,37 @@ export const signInAction = async (email: string, password: string) => {
     if (error) {
         return { error: error.message };
     }
+
+    return { 
+        session: {
+            access_token: data.session?.access_token,
+            refresh_token: data.session?.refresh_token,
+        }
+    };
 };
 
-export const signOutAction = async () => {
-    const supabase = await createClient();
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-        console.error(error.code + " " + error.message);
-    }
-
-    return redirect("/");
-};
-
-export async function resetPasswordAction(newPassword: string) {
+export const signOutAction = async (token?: string) => {
     const supabase = await createClient();
     
+    if (token) {
+        await supabase.auth.setSession({access_token: token, refresh_token: ''});
+    }
+    
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+        return { error: error.message };
+    }
+    
+    return { success: true };
+};
+
+export const resetPasswordAction = async (newPassword: string, token?: string) => {
+    const supabase = await createClient();
+    
+    if (token) {
+        await supabase.auth.setSession({access_token: token, refresh_token: ''});
+    }
+
     const { error } = await supabase.auth.updateUser({
         password: newPassword
     });
@@ -62,12 +81,11 @@ export async function resetPasswordAction(newPassword: string) {
     }
 
     return { success: true };
-}
+};
 
-export async function forgotPasswordAction(email: string) {
+export const forgotPasswordAction = async (email: string) => {
     const origin = (await headers()).get("origin");
     const redirectOrigin = origin?.replace('127.0.0.1', 'localhost');
-    
     const supabase = await createClient();
     
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -79,12 +97,11 @@ export async function forgotPasswordAction(email: string) {
     }
 
     return { success: true };
-}
+};
 
-export async function signInWithGoogleAction() {
+export const signInWithGoogleAction = async () => {
     const origin = (await headers()).get("origin");
     const redirectOrigin = origin?.replace('127.0.0.1', 'localhost');
-    
     const supabase = await createClient();
     
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -103,7 +120,7 @@ export async function signInWithGoogleAction() {
     }
 
     return { url: data.url };
-}
+};
 
 export async function getAuthProvidersAction() {
     return {

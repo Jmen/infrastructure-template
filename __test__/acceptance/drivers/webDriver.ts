@@ -1,12 +1,5 @@
 import { expect, type Page } from '@playwright/test';
-
-export interface ITestDriver {
-    auth: {
-        register(email: string, password: string): Promise<void>;
-        signIn(email: string, password: string): Promise<void>;
-        signOut(): Promise<void>;
-    };
-}
+import { ITestDriver } from './ITestDriver';
 
 export class PlaywrightWebDriver implements ITestDriver {
     constructor(private page: Page) {}

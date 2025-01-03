@@ -1,4 +1,4 @@
-import { ITestDriver } from '../drivers/webDriver';
+import { ITestDriver } from '../drivers/ITestDriver';
 
 export class User {
     private constructor(
