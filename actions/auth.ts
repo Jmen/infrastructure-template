@@ -5,22 +5,24 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 export const signUpAction = async (email: string, password: string) => {
-    const origin = (await headers()).get("origin");
-    const redirectOrigin = origin?.replace('127.0.0.1', 'localhost');
-
     const supabase = await createClient();
 
-    const { error } = await supabase.auth.signUp({
+    const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-            emailRedirectTo: `${redirectOrigin}/api/auth/callback`,
-        },
     });
 
-    if (error) {
-        console.error(error.code + " " + error.message);
-        return { error: error.message };
+    if (signUpError) {
+        return { error: signUpError.message };
+    }
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+    });
+
+    if (signInError) {
+        return { error: signInError.message };
     }
 };
 

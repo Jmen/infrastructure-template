@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input"
 import { signUpAction} from "@/actions/auth";
 import { useState } from "react";
 import { DebouncedButton } from '../debouncedButton';
+import { redirect } from "next/navigation";
 
 const formSchema = z.object({
     email: z.string()
@@ -27,7 +28,6 @@ const formSchema = z.object({
 
 export function RegisterForm() {
     const [error, setError] = useState<string | null>(null);
-    const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -44,16 +44,8 @@ export function RegisterForm() {
             setError(result.error);
         } else {
             setError(null);
-            setShowConfirmation(true);
+            redirect("/account");
         }
-    }
-
-    if (showConfirmation) {
-        return (
-            <div>
-                <p>Check your email for a confirmation link</p>
-            </div>
-        )
     }
 
     return (
