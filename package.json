@@ -11,6 +11,7 @@
     "lint": "next lint",
     "test:unit": "jest app",
     "test:acceptance": "npx playwright test",
+    "test:acceptance:ui": "npx playwright test --ui",
     "pre-commit": "next lint && npm run test:unit && next build"
   },
   "dependencies": {
