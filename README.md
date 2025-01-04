@@ -1,12 +1,12 @@
 # Infrastructure Template
 
-This is an opinionated GitHub repository template for a full-stack web application
+This is an opinionated GitHub Repository Template for a full-stack web application
 
-It sets up a Website, API, Database, Authentication (with Social Login), CI pipeline, and hosting using Vercel and Supabase
+It sets up a Website, API, Database, Authentication (with Social Login), CI Pipeline, and hosting using Vercel and Supabase
 
-There is support for developing locally using Docker, and the pipeline provides a Test and Production environment
+There is support for developing locally using Docker, and the CI Pipeline provides a Test and Production environment
 
-With this in place you can focus on the domain specific details of the pages, endpoints, and database tables of the application
+With this starting point, you can focus on the domain specific details of the pages, endpoints, and database tables which are unique to your application.
 
 ## Tech Stack
 
@@ -26,7 +26,7 @@ With this in place you can focus on the domain specific details of the pages, en
 
 ### Boring Technology
 
-One of the main theme's of the technologies choices, is to pick boring technology that is well understood, stable, predictable and has a large community.
+One of the main theme's of the technologies choices is to pick boring technology that is well understood, stable, predictable and has a large community.
 This makes it easier for new developers to understand the codebase, and faster to solve problems when they arise.
 
 ### Free Tier / Scale to Zero
