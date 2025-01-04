@@ -22,6 +22,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { User } from "@supabase/supabase-js"
 
 const formSchema = z.object({
     password: z.string()
@@ -33,7 +34,8 @@ const formSchema = z.object({
     path: ["confirmPassword"],
 });
 
-export function ResetPasswordForm() {
+export function ResetPasswordForm({ user }: { user: User | null }) {
+
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
     const router = useRouter();
@@ -49,6 +51,12 @@ export function ResetPasswordForm() {
 
     const { password, confirmPassword } = form.watch();
     const passwordsMatch = password === confirmPassword && password !== "";
+
+    const isEmailUser = user?.app_metadata?.providers?.includes('email');
+
+    if (!isEmailUser) {
+        return null;
+    }
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         if (!passwordsMatch) {
