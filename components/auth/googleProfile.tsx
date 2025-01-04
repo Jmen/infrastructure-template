@@ -25,7 +25,7 @@ export function GoogleProfile({ user }: Props) {
     const metadata = user.user_metadata as UserMetadata;
     const avatarUrl = metadata.avatar_url || metadata.picture;
     const name = metadata.full_name || metadata.name;
-    const isGoogleUser = user.app_metadata.provider === 'google';
+    const isGoogleUser = user.app_metadata.providers?.includes('google');
 
     if (!isGoogleUser || !avatarUrl) {
         return null;
