@@ -35,6 +35,7 @@ const formSchema = z.object({
 });
 
 export function ResetPasswordForm({ user }: { user: User | null }) {
+    console.log('user: ', user);
 
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);

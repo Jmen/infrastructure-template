@@ -16,6 +16,8 @@ interface Props {
 }
 
 export function GoogleProfile({ user }: Props) {
+    console.log('user: ', user);
+
     if (!user) {
         return null;
     }

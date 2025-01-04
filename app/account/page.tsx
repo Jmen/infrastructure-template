@@ -15,7 +15,7 @@ export default async function Page() {
         <div>
             <div className="flex flex-col items-center justify-between gap-6 p-12">
                 <UserDetails/>
-                <GoogleProfile user={user} />
+                <GoogleProfile user={user}/>
                 <ResetPasswordForm user={user}/>
                 <SignOutButton/>
             </div>
