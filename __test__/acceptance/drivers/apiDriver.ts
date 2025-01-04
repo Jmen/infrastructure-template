@@ -1,15 +1,14 @@
 import { ITestDriver } from './ITestDriver';
 
-export class ApiDriver implements ITestDriver {
-    private readonly baseUrl: string;
-    private accessToken?: string;
+export interface ApiContext {
+    token?: string;
+}
 
-    constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
-    }
+export class ApiDriver implements ITestDriver {
+    constructor(private readonly baseUrl: string) {}
 
     auth = {
-        register: async (email: string, password: string) => {
+        register: async (email: string, password: string): Promise<ApiContext> => {
             const response = await fetch(`${this.baseUrl}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -21,15 +20,15 @@ export class ApiDriver implements ITestDriver {
             }
 
             const data = await response.json();
-
+            
             if (data.error) {
                 throw new Error(data.error);
             }
 
-            this.accessToken = data.accessToken;
+            return { token: data.accessToken }
         },
 
-        signIn: async (email: string, password: string) => {
+        signIn: async (email: string, password: string): Promise<ApiContext> => {
             const response = await fetch(`${this.baseUrl}/api/auth/sign-in`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -46,18 +45,14 @@ export class ApiDriver implements ITestDriver {
                 throw new Error(data.error);
             }
 
-            this.accessToken = data.accessToken;
+            return { token: data.accessToken }
         },
 
-        signOut: async () => {
-            if (!this.accessToken) {
-                throw new Error('Not signed in');
-            }
-
+        signOut: async (context: ApiContext): Promise<void> => {
             const response = await fetch(`${this.baseUrl}/api/auth/sign-out`, {
                 method: 'POST',
                 headers: { 
-                    'Authorization': `Bearer ${this.accessToken}`
+                    'Authorization': `Bearer ${context.token}`
                 }
             });
 
@@ -71,7 +66,7 @@ export class ApiDriver implements ITestDriver {
                 throw new Error(data.error);
             }
 
-            this.accessToken = undefined;
+            context.token = undefined;
         }
     };
 } 

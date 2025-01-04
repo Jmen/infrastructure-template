@@ -1,28 +1,29 @@
-import { test, type Page } from '@playwright/test';
+import { test, type Browser } from '@playwright/test';
 import { User } from '../dsl/user';
 import { PlaywrightWebDriver } from '../drivers/webDriver';
 import { ApiDriver } from '../drivers/apiDriver';
 import { ITestDriver } from '../drivers/ITestDriver';
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+const DRIVER = process.env.DRIVER?.toLowerCase() || 'web';
 
 test.use({
     baseURL: BASE_URL,
 });
 
-const createDriver = (page: Page): ITestDriver => {
-    switch (process.env.DRIVER?.toLowerCase()) {
+const createDriver = (browser: Browser): ITestDriver => {
+    switch (DRIVER) {
         case 'api':
             return new ApiDriver(BASE_URL);
         case 'web':
         default:
-            return new PlaywrightWebDriver(page);
+            return new PlaywrightWebDriver(browser);
     }
 };
 
 test.describe('Authentication', () => {
-    test('can register, sign out, and sign in', async ({ page }) => {
-        const user = await User.register(createDriver(page));
+    test('can register, sign out, and sign in', async ({ browser }) => {
+        const user = await User.register(createDriver(browser));
 
         await user.signOut();
         

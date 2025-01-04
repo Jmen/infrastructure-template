@@ -1,25 +1,27 @@
-import { ITestDriver } from '../drivers/ITestDriver';
+import { ITestDriver, Context } from '../drivers/ITestDriver';
 
 export class User {
     private constructor(
         private readonly driver: ITestDriver,
-        public readonly email: string = `test-${Date.now()}@example.com`,
-        public readonly password: string = 'password123',
+        private context: Context,
+        private readonly email: string,
+        private readonly password: string,
     ) {}
 
     static async register(driver: ITestDriver): Promise<User> {
-        const user = new User(driver);
+        const email = `test-${Date.now()}@example.com`;
+        const password = 'password123';
 
-        await driver.auth.register(user.email, user.password);
-        
-        return user;
+        const context = await driver.auth.register(email, password);
+
+        return new User(driver, context, email, password);
     }
 
     async signIn() {
-        await this.driver.auth.signIn(this.email, this.password);
+        this.context = await this.driver.auth.signIn(this.email, this.password);
     }
 
     async signOut() {
-        await this.driver.auth.signOut();
+        await this.driver.auth.signOut(this.context);
     }
 } 
