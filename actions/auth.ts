@@ -65,11 +65,11 @@ export const signOutAction = async (token?: string) => {
     return { success: true };
 };
 
-export const resetPasswordAction = async (newPassword: string, token?: string) => {
+export const resetPasswordAction = async (newPassword: string, token?: string, refreshToken?: string) => {
     const supabase = await createClient();
     
-    if (token) {
-        await supabase.auth.setSession({access_token: token, refresh_token: ''});
+    if (token && refreshToken) {
+        await supabase.auth.setSession({ access_token: token, refresh_token: refreshToken });
     }
 
     const { error } = await supabase.auth.updateUser({

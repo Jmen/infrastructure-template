@@ -27,6 +27,22 @@ test.describe('Authentication', () => {
 
         await user.signOut();
         
-        await user.signIn();
+        await user.signIn(user.email, user.password);
+    });
+
+    test('password reset', async ({ browser }) => {
+        const email = User.uniqueEmail();
+        const initialPassword = 'initial-password';
+        const updatedPassword = 'updated-password';
+        
+        const user = await User.register(createDriver(browser), email, initialPassword);
+
+        await user.resetPassword(updatedPassword);
+
+        await user.signOut();
+
+        await user.signInIsUnauthorized(email, initialPassword);
+
+        await user.signIn(email, updatedPassword);
     });
 }); 
