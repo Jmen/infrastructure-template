@@ -1,8 +1,8 @@
 "use client";
 
 import { signOutAction } from "@/actions/auth";
-import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
+import { DebouncedButton } from "../debouncedButton";
 
 export function SignOutButton() {
 
@@ -12,8 +12,8 @@ export function SignOutButton() {
     }
 
     return (
-        <Button onClick={onClick}>
+        <DebouncedButton onDebouncedClick={onClick}>
             Sign out
-        </Button>
+        </DebouncedButton>
     );
 }
