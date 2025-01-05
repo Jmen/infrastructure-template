@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { DebouncedButton } from '../debouncedButton'
-import { resetPasswordAction } from "@/actions/auth"
+import { resetPasswordAction } from "@/components/auth/actions";
 import { useRouter } from "next/navigation"
 import {
     Card,

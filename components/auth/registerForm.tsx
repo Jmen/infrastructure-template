@@ -12,7 +12,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { signUpAction} from "@/actions/auth";
+import { signUpAction } from "@/components/auth/actions";
 import { useState } from "react";
 import { DebouncedButton } from '../debouncedButton';
 import { redirect } from "next/navigation";

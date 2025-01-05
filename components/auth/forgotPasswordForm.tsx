@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { DebouncedButton } from '../debouncedButton'
-import { forgotPasswordAction } from "@/actions/auth"
+import { forgotPasswordAction } from "@/components/auth/actions";
 import {
     Card,
     CardContent,

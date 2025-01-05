@@ -12,13 +12,12 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { signInAction } from "@/actions/auth";
+import { signInAction, getAuthProvidersAction } from "@/components/auth/actions";
 import { useState, useEffect } from "react";
 import { DebouncedButton } from '../debouncedButton';
 import { redirect } from "next/navigation";
 import Link from "next/link"
 import { GoogleSignIn } from "./googleSignIn"
-import { getAuthProvidersAction } from "@/actions/auth";
 import { Card, CardContent } from "../ui/card"
 
 const formSchema = z.object({

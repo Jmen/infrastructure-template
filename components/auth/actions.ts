@@ -126,4 +126,4 @@ export async function getAuthProvidersAction() {
     return {
         google: process.env.USE_GOOGLE_AUTH === "true"
     };
-}
+} 

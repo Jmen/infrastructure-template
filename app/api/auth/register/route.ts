@@ -1,4 +1,4 @@
-import { signUpAction } from "@/actions/auth";
+import { signUpAction } from "@/components/auth/actions";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {

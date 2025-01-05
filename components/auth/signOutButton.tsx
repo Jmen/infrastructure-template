@@ -1,6 +1,6 @@
 "use client";
 
-import { signOutAction } from "@/actions/auth";
+import { signOutAction } from "@/components/auth/actions";
 import { redirect } from "next/navigation";
 import { DebouncedButton } from "../debouncedButton";
 
