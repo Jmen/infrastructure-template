@@ -16,6 +16,7 @@ import { signUpAction} from "@/actions/auth";
 import { useState } from "react";
 import { DebouncedButton } from '../debouncedButton';
 import { redirect } from "next/navigation";
+import { Card, CardContent } from "../ui/card"
 
 const formSchema = z.object({
     email: z.string()
@@ -49,39 +50,43 @@ export function RegisterForm() {
     }
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input type="email" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                                <Input type="password" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <DebouncedButton type="submit" onDebouncedClick={form.handleSubmit(onSubmit)}>
-                    Create Account
-                </DebouncedButton>
-            </form>
-            {error && <p className="text-red-500 p-6">{error}</p>}
-        </Form>
+        <Card>
+            <CardContent className="pt-6">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input type="email" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <Input type="password" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <DebouncedButton type="submit" onDebouncedClick={form.handleSubmit(onSubmit)}>
+                            Create Account
+                        </DebouncedButton>
+                    </form>
+                    {error && <p className="text-red-500 p-6">{error}</p>}
+                </Form>
+            </CardContent>
+        </Card>
     )
 }

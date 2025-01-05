@@ -8,13 +8,13 @@
     "start": "next start",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
-    "lint": "next lint",
+    "lint": "next lint --fix",
     "test:unit": "jest app",
     "test:acceptance": "npx playwright test",
     "test:acceptance:api": "export DRIVER=api && npm run test:acceptance -- --project=chromium",
     "test:acceptance:web": "export DRIVER=web && npm run test:acceptance",
     "test:acceptance:ui": "npx playwright test --ui",
-    "pre-commit": "next lint && npm run test:unit && npm run test:acceptance:api && npm run test:acceptance:web",
+    "pre-commit": "next lint --fix && npm run test:unit && npm run test:acceptance:api && npm run test:acceptance:web",
     "test:flakiness-check": "npm run pre-commit && npm run pre-commit && npm run pre-commit"
   },
   "dependencies": {

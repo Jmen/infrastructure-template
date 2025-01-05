@@ -19,6 +19,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link"
 import { GoogleSignIn } from "./googleSignIn"
 import { getAuthProvidersAction } from "@/actions/auth";
+import { Card, CardContent } from "../ui/card"
 
 const formSchema = z.object({
     email: z.string()
@@ -57,54 +58,57 @@ export function SignInForm() {
     }
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input type="email" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                                <Input type="password" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                            <Link 
-                                href="/auth/forgot-password" 
-                                className="text-sm text-muted-foreground hover:text-primary mt-2 block"
-                            >
-                                Forgot your password?
-                            </Link>
-                        </FormItem>
-                    )}
-                />
-                <div className="flex items-center gap-4">
-                    <DebouncedButton type="submit" onDebouncedClick={form.handleSubmit(onSubmit)}>
-                        Sign In
-                    </DebouncedButton>
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
-                </div>
-
-                {providers.google && (
-                    <>
-                        <div className="border-t" />
-                        <GoogleSignIn onError={setError} />
-                    </>
-                )}
-            </form>
-        </Form>
+        <Card>
+            <CardContent className="pt-6">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input type="email" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <Input type="password" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                    <Link
+                                        href="/auth/forgot-password"
+                                        className="text-sm text-muted-foreground hover:text-primary mt-2 block"
+                                    >
+                                        Forgot your password?
+                                    </Link>
+                                </FormItem>
+                            )}
+                        />
+                        <div className="flex items-center gap-4">
+                            <DebouncedButton type="submit" onDebouncedClick={form.handleSubmit(onSubmit)}>
+                                Sign In
+                            </DebouncedButton>
+                            {error && <p className="text-red-500 text-sm">{error}</p>}
+                        </div>
+                        {providers.google && (
+                            <>
+                                <div className="border-t" />
+                                <GoogleSignIn onError={setError} />
+                            </>
+                        )}
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
     )
 }

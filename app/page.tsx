@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { Auth } from "@/components/auth/auth";
 import UserDetails from "@/components/userDetails";
+import { AuthOptions } from "@/components/auth/authOptions";
 
 export default async function Page() {
   const supabase = await createClient();
@@ -18,7 +18,7 @@ export default async function Page() {
     <div>
         <div className="flex flex-col items-center justify-between gap-6 p-12">
             <UserDetails/>
-            <Auth></Auth>
+            <AuthOptions/>
         </div>
     </div>
   );
