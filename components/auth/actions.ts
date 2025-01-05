@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/clients/server";
 import { headers } from "next/headers";
 
 export const signUpAction = async (email: string, password: string) => {

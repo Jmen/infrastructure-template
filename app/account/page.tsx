@@ -1,6 +1,6 @@
 "use server"
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/clients/server";
 import UserDetails from "@/components/userDetails";
 import { ResetPasswordForm } from "@/components/auth/resetPasswordForm";
 import { SignOutButton } from "@/components/auth/signOutButton";
