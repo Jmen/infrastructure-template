@@ -1,10 +1,12 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/clients/server";
-import UserDetails from "@/components/userDetails";
+import UserDetails from "@/components/profile/userDetails";
+import { ProfileForm } from "@/components/profile/profileForm";
+import { GoogleProfile } from "@/components/auth/googleProfile";
 import { ResetPasswordForm } from "@/components/auth/resetPasswordForm";
 import { SignOutButton } from "@/components/auth/signOutButton";
-import { GoogleProfile } from "@/components/auth/googleProfile";
+
 
 export default async function Page() {
     const supabase = await createClient();
@@ -15,6 +17,7 @@ export default async function Page() {
         <div>
             <div className="flex flex-col items-center justify-between gap-6 p-12">
                 <UserDetails/>
+                <ProfileForm/>
                 <GoogleProfile user={user}/>
                 <ResetPasswordForm user={user}/>
                 <SignOutButton/>

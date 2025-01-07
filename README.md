@@ -1,4 +1,4 @@
-# Infrastructure Template
+# 🏗️ Infrastructure Template
 
 This is an opinionated GitHub Repository Template for a full-stack web application
 
@@ -6,7 +6,7 @@ It sets up a Website, API, Database, Authentication (with Social Login), CI Pipe
 
 There is support for developing locally using Docker, and the CI Pipeline provides a Test and Production environment
 
-With this starting point, you can focus on the domain specific details of the pages, endpoints, and database tables which are unique to your application.
+This is a starting point that you can use to focus on the specific details of the pages, endpoints, and database tables which are unique to your application.
 
 ## Tech Stack
 
@@ -31,13 +31,12 @@ This makes it easier for new developers to understand the codebase, and faster t
 
 ### Free Tier / Scale to Zero
 
-The hosting services have been chosen to keep costs as low and predictable as possible. No credit card is required to get started, and the free tier should be sufficient for most small projects.
+The hosting services have been chosen to keep costs as low and predictable as possible, to avoid any unexpected bills.
+
+No credit card is required to get started, and the free tier should be sufficient for most small projects.
 
 ### Local Off-line Development
 
-The development environment is setup to be as close to production as possible, while still being able to run on a local machine without needing an internet connection.
-This also helps with using trunk based development, the more testing that can be done locally, the less likely it is that a bug will be introduced into the main branch.
+The development environment is configured to be as close to production as possible, while still being able to run on a local machine without needing an internet connection to run.
 
-
-
-
+This also helps with trunk based development, as the more testing that can be done locally, the less likely it is that a bug will be introduced before merging into the main branch.

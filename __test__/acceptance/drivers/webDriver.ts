@@ -10,7 +10,8 @@ export class PlaywrightWebDriver implements ITestDriver {
 
     auth = {
         register: async (email: string, password: string): Promise<WebContext> => {
-            const page = await this.browser.newPage();
+            const context = await this.browser.newContext();
+            const page = await context.newPage();
 
             await page.goto('/');
             await page.getByRole('tab', { name: /register/i }).click();
@@ -25,7 +26,8 @@ export class PlaywrightWebDriver implements ITestDriver {
         },
 
         signIn: async (email: string, password: string): Promise<WebContext> => {
-            const page = await this.browser.newPage();
+            const context = await this.browser.newContext();
+            const page = await context.newPage();
 
             await page.goto('/');
             await page.getByRole('tab', { name: /sign in/i }).click();
@@ -40,7 +42,8 @@ export class PlaywrightWebDriver implements ITestDriver {
         },
 
         signInIsUnauthorized: async (email: string, password: string): Promise<void> => {
-            const page = await this.browser.newPage();
+            const context = await this.browser.newContext();
+            const page = await context.newPage();
 
             await page.goto('/');
             await page.getByRole('tab', { name: /sign in/i }).click();
@@ -63,6 +66,25 @@ export class PlaywrightWebDriver implements ITestDriver {
             await page.getByLabel(/new password/i).fill(newPassword);
             await page.getByLabel(/confirm password/i).fill(newPassword);
             await page.getByRole('button', { name: /reset password/i }).click();
+        }
+    };
+
+    user = {
+        setMyProfile: async (context: WebContext, profile: { username: string }): Promise<void> => {
+            const { page } = context;
+            await page.goto('/account');
+            await page.getByLabel(/username/i).fill(profile.username);
+            await page.getByRole('button', { name: /update profile/i }).click();
+        },
+        getMyProfile: async (context: WebContext): Promise<{ username: string }> => {
+            const { page } = context;
+            await page.goto('/account');
+
+            const usernameInput = page.getByLabel(/username/i);
+            await usernameInput.waitFor({ state: 'visible' });
+            
+            const username = await usernameInput.inputValue();
+            return { username };
         }
     };
 } 

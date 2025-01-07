@@ -36,4 +36,15 @@ export class User {
     async resetPassword(newPassword: string) {
         await this.driver.auth.resetPassword(this.context, newPassword);
     }
+
+    async setUsername(username: string) {
+        await this.driver.user.setMyProfile(this.context, { username });
+    }
+
+    async usernameIs(expectedUsername: string): Promise<void> {
+        const profile = await this.driver.user.getMyProfile(this.context);
+        if (profile.username !== expectedUsername) {
+            throw new Error(`Expected username to be "${expectedUsername}" but found "${profile.username}"`);
+        }
+    }
 }

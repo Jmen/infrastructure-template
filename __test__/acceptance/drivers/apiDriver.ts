@@ -87,4 +87,37 @@ export class ApiDriver implements ITestDriver {
             this.checkResponse({ accessToken: context.accessToken, password: newPassword }, response, data);
         }
     };
+
+    user = {
+        setMyProfile: async (context: ApiContext, profile: { username: string }): Promise<void> => {
+            const response = await fetch(`${this.baseUrl}/api/my/profile`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${context.accessToken}`,
+                    'X-Refresh-Token': context.refreshToken || '',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(profile)
+            });
+
+            const data = await response.json();
+
+            this.checkResponse(profile, response, data);
+        },
+        getMyProfile: async (context: ApiContext): Promise<{ username: string }> => {
+            const response = await fetch(`${this.baseUrl}/api/my/profile`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${context.accessToken}`,
+                    'X-Refresh-Token': context.refreshToken || ''
+                }
+            });
+
+            const data = await response.json();
+            
+            this.checkResponse({ accessToken: context.accessToken }, response, data);
+
+            return data;
+        }
+    };
 } 

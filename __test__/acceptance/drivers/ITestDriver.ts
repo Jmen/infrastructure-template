@@ -11,4 +11,8 @@ export interface ITestDriver {
         signOut(context: Context): Promise<void>;
         resetPassword(context: Context, newPassword: string): Promise<void>;
     };
+    user: {
+        setMyProfile(context: Context, profile: { username: string }): Promise<void>;
+        getMyProfile(context: Context): Promise<{ username: string }>;
+    };
 } 

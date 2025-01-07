@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/clients/server";
-import UserDetails from "@/components/userDetails";
+import UserDetails from "@/components/profile/userDetails";
 import { AuthOptions } from "@/components/auth/authOptions";
 
 export default async function Page() {

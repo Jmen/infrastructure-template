@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input"
 import { signUpAction } from "@/components/auth/actions";
 import { useState } from "react";
 import { DebouncedButton } from '../debouncedButton';
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Card, CardContent } from "../ui/card"
 
 const formSchema = z.object({
@@ -29,6 +29,7 @@ const formSchema = z.object({
 
 export function RegisterForm() {
     const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -39,13 +40,18 @@ export function RegisterForm() {
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const result = await signUpAction(values.email, values.password);
+        try {
+            const result = await signUpAction(values.email, values.password);
 
-        if (result?.error) {
-            setError(result.error);
-        } else {
-            setError(null);
-            redirect("/account");
+            if (result?.error) {
+                setError(result.error);
+            } else {
+                setError(null);
+                router.push("/account");
+            }
+        } catch (error) {
+            console.error("Error during registration:", error);
+            setError("An unexpected error occurred");
         }
     }
 
