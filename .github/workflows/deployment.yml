@@ -21,10 +21,10 @@ jobs:
           version: latest
 
       - name: Link Supabase Project
-        run: supabase link --project-ref $SUPABASE_PROJECT_ID
+        run: supabase link --project-ref $SUPABASE_PROJECT_ID --workdir ./lib
 
       - name: Migrate Supabase DB
-        run: supabase db push
+        run: supabase db push --workdir ./lib
 
       - name: Install Vercel CLI
         run: npm install --global vercel
@@ -94,10 +94,10 @@ jobs:
           version: latest
 
       - name: Link Supabase Project
-        run: supabase link --project-ref $SUPABASE_PROJECT_ID
+        run: supabase link --project-ref $SUPABASE_PROJECT_ID --workdir ./lib
 
       - name: Migrate Supabase DB
-        run: supabase db push
+        run: supabase db push --workdir ./lib
 
       - name: Install Vercel CLI
         run: npm install --global vercel
