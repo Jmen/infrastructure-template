@@ -1,4 +1,5 @@
 import { ITestDriver, Context } from '../drivers/ITestDriver';
+import { expect } from '@playwright/test';
 
 export class User {
     private constructor(
@@ -43,8 +44,7 @@ export class User {
 
     async usernameIs(expectedUsername: string): Promise<void> {
         const profile = await this.driver.user.getMyProfile(this.context);
-        if (profile.username !== expectedUsername) {
-            throw new Error(`Expected username to be "${expectedUsername}" but found "${profile.username}"`);
-        }
+
+        expect(profile.username).toBe(expectedUsername);
     }
 }

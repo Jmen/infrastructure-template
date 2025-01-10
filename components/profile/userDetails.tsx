@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/clients/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function UserDetails() {
-    const [email, setEmail] = useState<string | undefined>(undefined);
+    const [email, setEmail] = useState<string | undefined>("Loading...");
 
     useEffect(() => {
         const client = createClient();

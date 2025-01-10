@@ -19,7 +19,12 @@ export class PlaywrightWebDriver implements ITestDriver {
             await page.getByLabel(/password/i).fill(password);
             await page.getByRole('button', { name: /create account/i }).click();
 
-            await expect(page).toHaveURL('/account');
+            await page.waitForLoadState('networkidle');
+
+            await page.goto('/account');
+
+            await page.waitForLoadState('networkidle');
+
             await expect(page.getByText(email)).toBeVisible();
 
             return { page };
@@ -34,6 +39,8 @@ export class PlaywrightWebDriver implements ITestDriver {
             await page.getByLabel(/email/i).fill(email);
             await page.getByLabel(/password/i).fill(password);
             await page.getByRole('button', { name: /sign in/i }).click();
+
+            await page.waitForLoadState('networkidle');
 
             await expect(page).toHaveURL('/account');
             await expect(page.getByText(email)).toBeVisible();
@@ -51,12 +58,17 @@ export class PlaywrightWebDriver implements ITestDriver {
             await page.getByLabel(/password/i).fill(password);
             await page.getByRole('button', { name: /sign in/i }).click();
 
+            await page.waitForLoadState('networkidle');
+
             await expect(page.getByText(/invalid/i)).toBeVisible();
         },
 
         signOut: async (context: WebContext): Promise<void> => {
             const { page } = context;
             await page.getByRole('button', { name: /sign out/i }).click();
+
+            await page.waitForLoadState('networkidle');
+
             await expect(page).toHaveURL('/');
         },
 
@@ -66,6 +78,8 @@ export class PlaywrightWebDriver implements ITestDriver {
             await page.getByLabel(/new password/i).fill(newPassword);
             await page.getByLabel(/confirm password/i).fill(newPassword);
             await page.getByRole('button', { name: /reset password/i }).click();
+
+            await page.waitForLoadState('networkidle');
         }
     };
 
@@ -75,10 +89,15 @@ export class PlaywrightWebDriver implements ITestDriver {
             await page.goto('/account');
             await page.getByLabel(/username/i).fill(profile.username);
             await page.getByRole('button', { name: /update profile/i }).click();
+
+            await page.waitForLoadState('networkidle');
         },
         getMyProfile: async (context: WebContext): Promise<{ username: string }> => {
             const { page } = context;
             await page.goto('/account');
+
+            await page.waitForTimeout(1000);
+            await page.waitForLoadState('networkidle');
 
             const usernameInput = page.getByLabel(/username/i);
             await usernameInput.waitFor({ state: 'visible' });

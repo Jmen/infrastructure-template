@@ -53,20 +53,13 @@ export async function POST(request: Request) {
     
         const token = authHeader.split(' ')[1];
 
-        console.log('token', token);
-        console.log('refreshToken', refreshToken);
-
         const supabase = await createClient();
 
         await supabase.auth.setSession({access_token: token, refresh_token: refreshToken});
         
         const userId = (await supabase.auth.getUser()).data.user?.id;
-
-        console.log('userId', userId);
         
         const { username } = await request.json();
-
-        console.log('username', username);
 
         const { data, error } = await supabase.from('profiles').upsert({
             user_id: userId,

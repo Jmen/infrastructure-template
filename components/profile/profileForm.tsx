@@ -1,45 +1,24 @@
 "use client"
 
 import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { DebouncedButton } from '../debouncedButton'
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/supabase/clients/client"
 
-const formSchema = z.object({
+const schema = z.object({
     username: z.string()
         .min(3, { message: "username must be at least 3 characters" })
         .max(32, { message: "username must be less than 32 characters" })
 });
 
-type Profile = z.infer<typeof formSchema>;
-
 export function ProfileForm() {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
-
-    const form = useForm<Profile>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            username: "",
-        },
-    });
+    const [isLoading, setIsLoading] = useState(true);
+    const [username, setUsername] = useState('Loading...');
 
     useEffect(() => {
         const supabase = createClient();
@@ -59,15 +38,21 @@ export function ProfileForm() {
                     setError(data.error);
                     return;
                 }
-                form.reset(data);
+                setUsername(data.username || '');
+                setIsLoading(false);
             })
             .catch(() => setError("Failed to load profile"));
         });
-    }, [form]);
+    }, []);
 
-    async function onSubmit(values: Profile) {
+    async function onSubmit() {
+        const result = schema.safeParse({ username });
+        if (!result.success) {
+            setError(result.error.errors[0].message);
+            return;
+        }
+
         const supabase = createClient();
-
         const { data: { session } } = await supabase.auth.getSession();
 
         try {
@@ -78,10 +63,8 @@ export function ProfileForm() {
                     'X-Refresh-Token': session?.refresh_token || '',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(values)
+                body: JSON.stringify({ username })
             });
-
-            console.log(response);
 
             const data = await response.json();
     
@@ -89,16 +72,17 @@ export function ProfileForm() {
                 setError(data.error);
                 return;
             }
+
+            setError(null);
+            setSuccess(true);
+
+            setTimeout(() => {
+                setSuccess(false);
+            }, 2000);
         } catch (error) {
             console.error(error);
+            setError('An unexpected error occurred');
         }
-
-        setError(null);
-        setSuccess(true);
-
-        setTimeout(() => {
-            setSuccess(false);
-        }, 2000);
     }
 
     return (
@@ -107,30 +91,24 @@ export function ProfileForm() {
                 <CardTitle>Profile</CardTitle>
             </CardHeader>
             <CardContent>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                        <FormField
-                            control={form.control}
-                            name="username"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Username</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
+                <form onSubmit={onSubmit} className="space-y-8">
+                    <div className="space-y-2">
+                        <Label htmlFor="username">Username</Label>
+                        <Input
+                            id="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            disabled={isLoading}
                         />
-                        <div className="flex items-center gap-4">
-                            <DebouncedButton type="submit" onDebouncedClick={form.handleSubmit(onSubmit)}>
-                                Update Profile
-                            </DebouncedButton>
-                            {error && <p className="text-red-500 text-sm">{error}</p>}
-                            {success && <p className="text-green-500 text-sm">Profile updated</p>}
-                        </div>
-                    </form>
-                </Form>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <DebouncedButton type="submit" onDebouncedClick={onSubmit}>
+                            Update Profile
+                        </DebouncedButton>
+                        {error && <p className="text-red-500 text-sm">{error}</p>}
+                        {success && <p className="text-green-500 text-sm">Profile updated</p>}
+                    </div>
+                </form>
             </CardContent>
         </Card>
     );
