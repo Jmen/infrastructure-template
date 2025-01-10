@@ -1,12 +1,12 @@
 # 🏗️ Infrastructure Template
 
-This is an opinionated GitHub Repository Template for a full-stack web application
+This is an opinionated GitHub Repository Template for a full-stack web application, based around Supabase and Vercel
 
-It sets up a Website, API, Database, Authentication (with Social Login), CI Pipeline, and hosting using Vercel and Supabase
+It sets up a Website, API, Database (with migrations), Authentication (with Social Login), CI Pipeline, and web hosting.
 
-There is support for developing locally using Docker, and the CI Pipeline provides a Test and Production environment
+There is support for developing locally using Docker, and the CI Pipeline deploys to a Test and Production environment
 
-This is a starting point that you can use to focus on the specific details of the pages, endpoints, and database tables which are unique to your application.
+This is a starting point that you can use to build the pages, endpoints, and database tables which are unique to your application.
 
 ## Tech Stack
 
@@ -26,17 +26,17 @@ This is a starting point that you can use to focus on the specific details of th
 
 ### Boring Technology
 
-One of the main theme's of the technologies choices is to pick boring technology that is well understood, stable, predictable and has a large community.
-This makes it easier for new developers to understand the codebase, and faster to solve problems when they arise.
+One of the main themes behind the framework and service choices is to pick boring technology that is well understood, stable, predictable and has a large community.
+This makes it easier to understand the codebase, and faster to find solutions to common problems.
 
 ### Free Tier / Scale to Zero
 
-The hosting services have been chosen to keep costs as low and predictable as possible, to avoid any unexpected bills.
+The hosting services have been chosen to keep costs as low and predictable as possible, and to avoid any unexpected bills.
 
 No credit card is required to get started, and the free tier should be sufficient for most small projects.
 
 ### Local Off-line Development
 
-The development environment is configured to be as close to production as possible, while still being able to run on a local machine without needing an internet connection to run.
+The development environment is configured to be as close to production as possible, while still being able to run on a local machine without needing an internet connection.
 
-This also helps with trunk based development, as the more testing that can be done locally, the less likely it is that a bug will be introduced before merging into the main branch.
+This also helps with trunk based development, as the more testing that can be done locally, the less likely it is that a bug will be introduced before pushing to the main branch.
