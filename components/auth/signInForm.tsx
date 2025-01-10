@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input"
 import { signInAction, getAuthProvidersAction } from "@/components/auth/actions";
 import { useState, useEffect } from "react";
 import { DebouncedButton } from '../debouncedButton';
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link"
 import { GoogleSignIn } from "./googleSignIn"
 import { Card, CardContent } from "../ui/card"
@@ -32,6 +32,7 @@ const formSchema = z.object({
 export function SignInForm() {
     const [error, setError] = useState<string | null>(null);
     const [providers, setProviders] = useState<{ google: boolean }>({ google: false });
+    const router = useRouter();
 
     useEffect(() => {
         getAuthProvidersAction().then(setProviders);
@@ -52,7 +53,7 @@ export function SignInForm() {
             setError(result.error);
         } else {
             setError(null);
-            redirect("/account");
+            router.push("/account");
         }
     }
 
