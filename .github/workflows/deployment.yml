@@ -20,11 +20,11 @@ jobs:
         with:
           version: latest
 
-      - name: Link Supabase Project
-        run: supabase link --project-ref $SUPABASE_PROJECT_ID --workdir ./lib
-
       - name: Replace config.toml with CI version
         run: cp -f ./lib/supabase/config.ci.toml ./lib/supabase/config.toml
+
+      - name: Link Supabase Project
+        run: supabase link --project-ref $SUPABASE_PROJECT_ID --workdir ./lib
 
       - name: Migrate Supabase DB
         run: supabase db push --workdir ./lib
@@ -96,11 +96,11 @@ jobs:
         with:
           version: latest
 
-      - name: Link Supabase Project
-        run: supabase link --project-ref $SUPABASE_PROJECT_ID --workdir ./lib
-
       - name: Replace config.toml with CI version
         run: cp -f ./lib/supabase/config.ci.toml ./lib/supabase/config.toml
+
+      - name: Link Supabase Project
+        run: supabase link --project-ref $SUPABASE_PROJECT_ID --workdir ./lib
 
       - name: Migrate Supabase DB
         run: supabase db push --workdir ./lib
