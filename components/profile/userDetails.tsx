@@ -10,11 +10,11 @@ export function UserDetails() {
     useEffect(() => {
         const client = createClient();
 
-        client.auth.getSession().then((session) => {
-            const email = session?.data?.session?.user?.email;
+        client.auth.getUser().then((user) => {
+            const email = user?.data?.user?.email;
 
             if (email) {
-                setEmail(session?.data.session?.user.email);
+                setEmail(email);
             } else {
                 setEmail("Not logged in");
             }
