@@ -1,7 +1,8 @@
 import { signUpAction } from "@/components/auth/actions";
-import { badRequest, internalServerError, ok } from "@/app/api/apiResponse";
+import { badRequest, internalServerError, ok } from "../../apiResponse";
+import { withErrorHandler } from "../../handlers";
 
-export async function POST(request: Request) {
+export const POST = withErrorHandler(async (request: Request) => {
     const { email, password } = await request.json();
     
     const result = await signUpAction(email, password);
@@ -19,4 +20,4 @@ export async function POST(request: Request) {
         accessToken: result.session.access_token,
         refreshToken: result.session.refresh_token,
     });
-} 
+});

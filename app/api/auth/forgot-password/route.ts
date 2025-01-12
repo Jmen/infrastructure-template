@@ -1,14 +1,15 @@
 import { forgotPasswordAction } from "@/components/auth/actions";
-import { badRequest, ok } from "@/app/api/apiResponse";
+import { badRequest, ok } from "../../apiResponse";
+import { withErrorHandler } from "../../handlers";
 
-export async function POST(request: Request) {
+export const POST = withErrorHandler(async (request: Request) => {
     const { email } = await request.json();
     
     const result = await forgotPasswordAction(email);
     
     if (result?.error) {
-        return badRequest(result.error);
+        return badRequest(result.error.code, result.error.message);
     }
     
     return ok();
-} 
+});

@@ -89,7 +89,7 @@ export const resetPasswordAction = async (newPassword: string, token?: string, r
     });
 
     if (error) {
-        return { error: error.message };
+        return { error: { code: error.code, message: error.message } };
     }
 
     return { success: true };
@@ -105,7 +105,7 @@ export const forgotPasswordAction = async (email: string) => {
     });
 
     if (error) {
-        return { error: error.message };
+        return { error: { code: error.code, message: error.message } };
     }
 
     return { success: true };

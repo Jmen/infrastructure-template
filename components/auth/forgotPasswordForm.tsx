@@ -44,7 +44,7 @@ export function ForgotPasswordForm() {
         const result = await forgotPasswordAction(values.email);
 
         if (result.error) {
-            setError(result.error);
+            setError(result.error.message);
             return;
         }
 

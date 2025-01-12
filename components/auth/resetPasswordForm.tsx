@@ -66,7 +66,7 @@ export function ResetPasswordForm({ user }: { user: User | null }) {
         const result = await resetPasswordAction(values.password);
         
         if (result.error) {
-            setError(result.error);
+            setError(result.error.message);
             return;
         }
 
