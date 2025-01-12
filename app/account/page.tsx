@@ -1,17 +1,19 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/clients/server";
-import UserDetails from "@/components/profile/userDetails";
+import { redirectIfNotLoggedIn } from "@/components/auth/actions";
+import { UserDetails } from "@/components/profile/userDetails";
 import { ProfileForm } from "@/components/profile/profileForm";
 import { GoogleProfile } from "@/components/auth/googleProfile";
 import { ResetPasswordForm } from "@/components/auth/resetPasswordForm";
 import { SignOutButton } from "@/components/auth/signOutButton";
 
-
 export default async function Page() {
-    const supabase = await createClient();
+    await redirectIfNotLoggedIn();
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
 
     return (
         <div>

@@ -2,6 +2,17 @@
 
 import { createClient } from "@/lib/supabase/clients/server";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+
+export const redirectIfNotLoggedIn = async () => {
+    const supabase = await createClient()
+
+    const { data: { user }, error } = await supabase.auth.getUser()
+    if (error || !user) { 
+        console.error(error);
+        redirect('/')
+    }
+}
 
 export const signUpAction = async (email: string, password: string) => {
     const supabase = await createClient();
@@ -65,6 +76,7 @@ export const signOutAction = async (token?: string) => {
     return { success: true };
 };
 
+// TODO: what if user is able to pass null values?
 export const resetPasswordAction = async (newPassword: string, token?: string, refreshToken?: string) => {
     const supabase = await createClient();
     
