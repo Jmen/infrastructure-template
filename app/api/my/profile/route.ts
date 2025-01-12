@@ -1,23 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/clients/server";
+import { getTokens } from "@/app/api/auth";
 
 export const GET = async (request: NextRequest) => {
-    const authHeader = request.headers.get('Authorization');
-    const refreshToken = request.headers.get('X-Refresh-Token') || '';
+    const { accessToken, refreshToken, error: getTokensError } = await getTokens(request);
 
-    if (!authHeader?.startsWith('Bearer ')) {
-        return NextResponse.json({error: "Authorization header required"}, {status: 401});
+    if (getTokensError || !accessToken || !refreshToken) {
+        return { errorResponse: NextResponse.json({ error: getTokensError }, { status: 401 }) };
     }
-
-    if (!refreshToken || refreshToken === '') {
-        return NextResponse.json({error: "Refresh token required"}, {status: 401});
-    }
-
-    const token = authHeader.split(' ')[1];
 
     const supabase = await createClient();
 
-    await supabase.auth.setSession({access_token: token, refresh_token: refreshToken});
+    await supabase.auth.setSession({access_token: accessToken, refresh_token: refreshToken});
 
     const userId = (await supabase.auth.getUser()).data.user?.id;
 
@@ -38,24 +32,17 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json({ username: data[0].username });
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
     try {
-        const authHeader = request.headers.get('Authorization');
-        const refreshToken = request.headers.get('X-Refresh-Token') || '';
-    
-        if (!authHeader?.startsWith('Bearer ')) {
-            return NextResponse.json({error: "Authorization header required"}, { status: 401 });
+        const { accessToken, refreshToken, error: getTokensError } = await getTokens(request);
+
+        if (getTokensError || !accessToken || !refreshToken) {
+            return { errorResponse: NextResponse.json({ error: getTokensError }, { status: 401 }) };
         }
-    
-        if (!refreshToken || refreshToken === '') {
-            return NextResponse.json({error: "Refresh token required"}, { status: 401 });
-        }
-    
-        const token = authHeader.split(' ')[1];
 
         const supabase = await createClient();
 
-        await supabase.auth.setSession({access_token: token, refresh_token: refreshToken});
+        await supabase.auth.setSession({access_token: accessToken, refresh_token: refreshToken});
         
         const userId = (await supabase.auth.getUser()).data.user?.id;
         
