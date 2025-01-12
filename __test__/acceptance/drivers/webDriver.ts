@@ -29,7 +29,6 @@ export class PlaywrightWebDriver implements ITestDriver {
 
             return { page };
         },
-
         signIn: async (email: string, password: string): Promise<WebContext> => {
             const context = await this.browser.newContext();
             const page = await context.newPage();
@@ -50,7 +49,6 @@ export class PlaywrightWebDriver implements ITestDriver {
 
             return { page };
         },
-
         signInIsUnauthorized: async (email: string, password: string): Promise<void> => {
             const context = await this.browser.newContext();
             const page = await context.newPage();
@@ -65,14 +63,12 @@ export class PlaywrightWebDriver implements ITestDriver {
 
             await expect(page.getByText(/invalid/i)).toBeVisible();
         },
-
         signOut: async (context: WebContext): Promise<void> => {
             const { page } = context;
             await page.getByRole('button', { name: /sign out/i }).click();
 
             await page.waitForLoadState('networkidle');
         },
-
         resetPassword: async (context: WebContext, newPassword: string): Promise<void> => {
             const { page } = context;
             await page.goto('/account');

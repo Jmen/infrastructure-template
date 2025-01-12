@@ -1,19 +1,19 @@
 import { signOutAction } from "@/components/auth/actions";
-import { NextResponse } from "next/server";
+import { ok, unauthorised, badRequest } from "../../apiResponse";
 
 export async function POST(request: Request) {
     const authHeader = request.headers.get('Authorization');
     
     if (!authHeader?.startsWith('Bearer ')) {
-        return NextResponse.json({ error: "Authorization header required" }, { status: 401 });
+        return unauthorised();
     }
 
     const token = authHeader.split(' ')[1];
     const result = await signOutAction(token);
     
     if (result?.error) {
-        return NextResponse.json({ error: result.error }, { status: 400 });
+        return badRequest(result.error.code, result.error.message);
     }
     
-    return NextResponse.json({ success: true });
+    return ok({ success: true });
 }

@@ -33,12 +33,12 @@ export function ProfileForm() {
                 },
             })
             .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    setError(data.error);
+            .then(body => {
+                if (body.error) {
+                    setError(body.error);
                     return;
                 }
-                setUsername(data.username || '');
+                setUsername(body.data.username || '');
                 setIsLoading(false);
             })
             .catch(() => setError("Failed to load profile"));
@@ -66,10 +66,10 @@ export function ProfileForm() {
                 body: JSON.stringify({ username })
             });
 
-            const data = await response.json();
+            const body = await response.json();
     
-            if (data.error) {
-                setError(data.error);
+            if (body.error) {
+                setError(body.error);
                 return;
             }
 

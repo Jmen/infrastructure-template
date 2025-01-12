@@ -50,7 +50,7 @@ export function SignInForm() {
         const result = await signInAction(values.email, values.password);
 
         if (result?.error) {
-            setError(result.error);
+            setError(result.error.message);
         } else {
             setError(null);
             router.push("/account");

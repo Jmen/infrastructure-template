@@ -44,7 +44,7 @@ export function RegisterForm() {
             const result = await signUpAction(values.email, values.password);
 
             if (result?.error) {
-                setError(result.error);
+                setError(result.error.message);
             } else {
                 setError(null);
                 router.push("/account");

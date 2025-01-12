@@ -22,7 +22,7 @@ export const signUpAction = async (email: string, password: string) => {
     });
 
     if (signUpError) {
-        return { error: signUpError.message };
+        return { error: { code: signUpError.code, message: signUpError.message } };
     }
 
     const { data, error: signInError } = await supabase.auth.signInWithPassword({
@@ -31,7 +31,7 @@ export const signUpAction = async (email: string, password: string) => {
     });
 
     if (signInError) {
-        return { error: signInError.message };
+        return { error: { code: signInError.code, message: signInError.message } };
     }
 
     return { 
@@ -50,7 +50,7 @@ export const signInAction = async (email: string, password: string) => {
     });
 
     if (error) {
-        return { error: error.message };
+        return { error: { code: error.code, message: error.message } };
     }
 
     return { 
@@ -70,7 +70,7 @@ export const signOutAction = async (token?: string) => {
     
     const { error } = await supabase.auth.signOut();
     if (error) {
-        return { error: error.message };
+        return { error: { code: error.code, message: error.message } };
     }
     
     return { success: true };

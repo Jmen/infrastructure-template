@@ -1,5 +1,5 @@
 import { forgotPasswordAction } from "@/components/auth/actions";
-import { NextResponse } from "next/server";
+import { badRequest, ok } from "@/app/api/apiResponse";
 
 export async function POST(request: Request) {
     const { email } = await request.json();
@@ -7,8 +7,8 @@ export async function POST(request: Request) {
     const result = await forgotPasswordAction(email);
     
     if (result?.error) {
-        return NextResponse.json({ error: result.error }, { status: 400 });
+        return badRequest(result.error);
     }
     
-    return NextResponse.json({ success: true });
+    return ok();
 } 

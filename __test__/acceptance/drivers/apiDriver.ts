@@ -8,71 +8,81 @@ export interface ApiContext {
 export class ApiDriver implements ITestDriver {
     constructor(private readonly baseUrl: string) {}
 
-    checkResponse(request: any, response: Response, data: any) {
-        if (!response.ok || data.error) {
-            console.log(`request: ${JSON.stringify(request)}`);
-            console.error(`response status: ${response.status}`);
-            console.error(`response data: ${JSON.stringify(data)}`);
-            throw new Error(data.error);
+    async checkResponse(request: Request, response: Response, expectedStatusCode: number = 200): Promise<any> {
+        const responseBody = await response.json();
+
+        if (response.status !== expectedStatusCode) {
+            console.error('REQUEST:');
+            console.error(` method: ${request.method}`);
+            console.error(` path: ${request.url}`);
+            console.error(` data: ${JSON.stringify(request.body)}`);
+            console.error('RESPONSE:');
+            console.error(` expected status: ${expectedStatusCode}`);
+            console.error(` actual   status: ${response.status}`);
+            console.error(` data: ${JSON.stringify(responseBody)}`);
+            
+            throw new Error(response.statusText);
         }
+
+        return responseBody;
     }
 
     auth = {
         register: async (email: string, password: string): Promise<ApiContext> => {
-            const response = await fetch(`${this.baseUrl}/api/auth/register`, {
+            const request = new Request(`${this.baseUrl}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             });
 
-            const data = await response.json();
-            
-            this.checkResponse({ email, password }, response, data);
+            const response = await fetch(request);
 
-            return { accessToken: data.accessToken, refreshToken: data.refreshToken };
+            const body = await this.checkResponse(request, response);
+
+            return { accessToken: body.data.accessToken, refreshToken: body.data.refreshToken };
         },
 
         signIn: async (email: string, password: string): Promise<ApiContext> => {
-            const response = await fetch(`${this.baseUrl}/api/auth/sign-in`, {
+            const request = new Request(`${this.baseUrl}/api/auth/sign-in`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             });
 
-            const data = await response.json();
+            const response = await fetch(request);
             
-            this.checkResponse({ email, password }, response, data);
+            const body = await this.checkResponse(request, response);
 
-            return { accessToken: data.accessToken, refreshToken: data.refreshToken };
+            return { accessToken: body.data.accessToken, refreshToken: body.data.refreshToken };
         },
 
         signInIsUnauthorized: async (email: string, password: string): Promise<void> => {
-            const response = await fetch(`${this.baseUrl}/api/auth/sign-in`, {
+            const request = new Request(`${this.baseUrl}/api/auth/sign-in`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             });
 
-            if (response.status !== 400) {
-                throw new Error(`Expected 400 status, got ${response.status}`);
-            }
+            const response = await fetch(request);
+
+            await this.checkResponse(request, response, 400);
         },
 
         signOut: async (context: ApiContext): Promise<void> => {
-            const response = await fetch(`${this.baseUrl}/api/auth/sign-out`, {
+            const request = new Request(`${this.baseUrl}/api/auth/sign-out`, {
                 method: 'POST',
                 headers: { 
                     'Authorization': `Bearer ${context.accessToken}`
                 }
             });
 
-            const data = await response.json();
-            
-            this.checkResponse({ accessToken: context.accessToken }, response, data);
+            const response = await fetch(request);
+
+            await this.checkResponse(request, response);
         },
 
         resetPassword: async (context: ApiContext, newPassword: string): Promise<void> => {
-            const response = await fetch(`${this.baseUrl}/api/auth/reset-password`, {
+            const request = new Request(`${this.baseUrl}/api/auth/reset-password`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${context.accessToken}`,
@@ -82,15 +92,15 @@ export class ApiDriver implements ITestDriver {
                 body: JSON.stringify({ password: newPassword })
             });
 
-            const data = await response.json();
-            
-            this.checkResponse({ accessToken: context.accessToken, password: newPassword }, response, data);
+            const response = await fetch(request);
+
+            await this.checkResponse(request, response);
         }
     };
 
     user = {
         setMyProfile: async (context: ApiContext, profile: { username: string }): Promise<void> => {
-            const response = await fetch(`${this.baseUrl}/api/my/profile`, {
+            const request = new Request(`${this.baseUrl}/api/my/profile`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${context.accessToken}`,
@@ -100,12 +110,12 @@ export class ApiDriver implements ITestDriver {
                 body: JSON.stringify(profile)
             });
 
-            const data = await response.json();
+            const response = await fetch(request);
 
-            this.checkResponse(profile, response, data);
+            await this.checkResponse(request, response);
         },
         getMyProfile: async (context: ApiContext): Promise<{ username: string }> => {
-            const response = await fetch(`${this.baseUrl}/api/my/profile`, {
+            const request = new Request(`${this.baseUrl}/api/my/profile`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${context.accessToken}`,
@@ -113,11 +123,11 @@ export class ApiDriver implements ITestDriver {
                 }
             });
 
-            const data = await response.json();
-            
-            this.checkResponse({ accessToken: context.accessToken }, response, data);
+            const response = await fetch(request);
 
-            return data;
+            const body = await this.checkResponse(request, response);
+
+            return body.data;
         }
     };
 } 
