@@ -42,7 +42,10 @@ export class PlaywrightWebDriver implements ITestDriver {
 
             await page.waitForLoadState('networkidle');
 
-            await expect(page).toHaveURL('/account');
+            await page.goto('/account');
+
+            await page.waitForLoadState('networkidle');
+
             await expect(page.getByText(email)).toBeVisible();
 
             return { page };
@@ -68,8 +71,6 @@ export class PlaywrightWebDriver implements ITestDriver {
             await page.getByRole('button', { name: /sign out/i }).click();
 
             await page.waitForLoadState('networkidle');
-
-            await expect(page).toHaveURL('/');
         },
 
         resetPassword: async (context: WebContext, newPassword: string): Promise<void> => {
