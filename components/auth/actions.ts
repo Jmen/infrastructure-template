@@ -5,137 +5,143 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const redirectIfNotLoggedIn = async () => {
-    const supabase = await createClient()
+  const supabase = await createClient();
 
-    const { data: { user }, error } = await supabase.auth.getUser()
-    if (error || !user) { 
-        console.error(error);
-        redirect('/')
-    }
-}
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+  if (error || !user) {
+    console.error(error);
+    redirect("/");
+  }
+};
 
 export const signUpAction = async (email: string, password: string) => {
-    const supabase = await createClient();
-    const { error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-    });
+  const supabase = await createClient();
+  const { error: signUpError } = await supabase.auth.signUp({
+    email,
+    password,
+  });
 
-    if (signUpError) {
-        return { error: { code: signUpError.code, message: signUpError.message } };
-    }
+  if (signUpError) {
+    return { error: { code: signUpError.code, message: signUpError.message } };
+  }
 
-    const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-    });
+  const { data, error: signInError } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-    if (signInError) {
-        return { error: { code: signInError.code, message: signInError.message } };
-    }
+  if (signInError) {
+    return { error: { code: signInError.code, message: signInError.message } };
+  }
 
-    return { 
-        session: {
-            access_token: data.session?.access_token,
-            refresh_token: data.session?.refresh_token,
-        }
-    };
+  return {
+    session: {
+      access_token: data.session?.access_token,
+      refresh_token: data.session?.refresh_token,
+    },
+  };
 };
 
 export const signInAction = async (email: string, password: string) => {
-    const supabase = await createClient();
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-    });
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-    if (error) {
-        return { error: { code: error.code, message: error.message } };
-    }
+  if (error) {
+    return { error: { code: error.code, message: error.message } };
+  }
 
-    return { 
-        session: {
-            access_token: data.session?.access_token,
-            refresh_token: data.session?.refresh_token,
-        }
-    };
+  return {
+    session: {
+      access_token: data.session?.access_token,
+      refresh_token: data.session?.refresh_token,
+    },
+  };
 };
 
 export const signOutAction = async (token?: string) => {
-    const supabase = await createClient();
-    
-    if (token) {
-        await supabase.auth.setSession({access_token: token, refresh_token: ''});
-    }
-    
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-        return { error: { code: error.code, message: error.message } };
-    }
-    
-    return { success: true };
+  const supabase = await createClient();
+
+  if (token) {
+    await supabase.auth.setSession({ access_token: token, refresh_token: "" });
+  }
+
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    return { error: { code: error.code, message: error.message } };
+  }
+
+  return { success: true };
 };
 
 // TODO: what if user is able to pass null values?
 export const resetPasswordAction = async (newPassword: string, token?: string, refreshToken?: string) => {
-    const supabase = await createClient();
-    
-    if (token && refreshToken) {
-        await supabase.auth.setSession({ access_token: token, refresh_token: refreshToken });
-    }
+  const supabase = await createClient();
 
-    const { error } = await supabase.auth.updateUser({
-        password: newPassword
+  if (token && refreshToken) {
+    await supabase.auth.setSession({
+      access_token: token,
+      refresh_token: refreshToken,
     });
+  }
 
-    if (error) {
-        return { error: { code: error.code, message: error.message } };
-    }
+  const { error } = await supabase.auth.updateUser({
+    password: newPassword,
+  });
 
-    return { success: true };
+  if (error) {
+    return { error: { code: error.code, message: error.message } };
+  }
+
+  return { success: true };
 };
 
 export const forgotPasswordAction = async (email: string) => {
-    const origin = (await headers()).get("origin");
-    const redirectOrigin = origin?.replace('127.0.0.1', 'localhost');
-    const supabase = await createClient();
-    
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${redirectOrigin}/api/auth/callback?next=/auth/reset-password`,
-    });
+  const origin = (await headers()).get("origin");
+  const redirectOrigin = origin?.replace("127.0.0.1", "localhost");
+  const supabase = await createClient();
 
-    if (error) {
-        return { error: { code: error.code, message: error.message } };
-    }
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${redirectOrigin}/api/auth/callback?next=/auth/reset-password`,
+  });
 
-    return { success: true };
+  if (error) {
+    return { error: { code: error.code, message: error.message } };
+  }
+
+  return { success: true };
 };
 
 export const signInWithGoogleAction = async () => {
-    const origin = (await headers()).get("origin");
-    const redirectOrigin = origin?.replace('127.0.0.1', 'localhost');
-    const supabase = await createClient();
-    
-    const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-            redirectTo: `${redirectOrigin}/api/auth/callback?next=/account`,
-            queryParams: {
-                prompt: 'select_account',
-                access_type: 'offline'
-            }
-        },
-    });
+  const origin = (await headers()).get("origin");
+  const redirectOrigin = origin?.replace("127.0.0.1", "localhost");
+  const supabase = await createClient();
 
-    if (error) {
-        return { error: error.message };
-    }
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${redirectOrigin}/api/auth/callback?next=/account`,
+      queryParams: {
+        prompt: "select_account",
+        access_type: "offline",
+      },
+    },
+  });
 
-    return { url: data.url };
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { url: data.url };
 };
 
 export async function getAuthProvidersAction() {
-    return {
-        google: process.env.USE_GOOGLE_AUTH === "true"
-    };
-} 
+  return {
+    google: process.env.USE_GOOGLE_AUTH === "true",
+  };
+}

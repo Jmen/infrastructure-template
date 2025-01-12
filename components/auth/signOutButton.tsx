@@ -5,15 +5,10 @@ import { redirect } from "next/navigation";
 import { DebouncedButton } from "../debouncedButton";
 
 export function SignOutButton() {
+  async function onClick() {
+    await signOutAction();
+    redirect("/");
+  }
 
-    async function onClick() {
-        await signOutAction();
-        redirect("/");
-    }
-
-    return (
-        <DebouncedButton onDebouncedClick={onClick}>
-            Sign out
-        </DebouncedButton>
-    );
+  return <DebouncedButton onDebouncedClick={onClick}>Sign out</DebouncedButton>;
 }

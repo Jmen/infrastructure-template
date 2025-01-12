@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { createClient } from "@/lib/supabase/clients/server";
 import { redirectIfNotLoggedIn } from "@/components/auth/actions";
@@ -9,21 +9,23 @@ import { ResetPasswordForm } from "@/components/auth/resetPasswordForm";
 import { SignOutButton } from "@/components/auth/signOutButton";
 
 export default async function Page() {
-    await redirectIfNotLoggedIn();
+  await redirectIfNotLoggedIn();
 
-    const supabase = await createClient()
+  const supabase = await createClient();
 
-    const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    return (
-        <div>
-            <div className="flex flex-col items-center justify-between gap-6 p-12">
-                <UserDetails/>
-                <ProfileForm/>
-                <GoogleProfile user={user}/>
-                <ResetPasswordForm user={user}/>
-                <SignOutButton/>
-            </div>
-        </div>
-    );
+  return (
+    <div>
+      <div className="flex flex-col items-center justify-between gap-6 p-12">
+        <UserDetails />
+        <ProfileForm />
+        <GoogleProfile user={user} />
+        <ResetPasswordForm user={user} />
+        <SignOutButton />
+      </div>
+    </div>
+  );
 }

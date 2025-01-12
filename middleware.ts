@@ -1,17 +1,17 @@
-import type { NextRequest } from 'next/server'
-import { updateSession } from '@/lib/supabase/middleware/middleware'
+import type { NextRequest } from "next/server";
+import { updateSession } from "@/lib/supabase/middleware/middleware";
 
 export const config = {
-    matcher: [
-      /*
-       * Match all request paths except for the ones starting with:
-       * - _next/static (static files)
-       * - _next/image (image optimization files)
-       * - favicon.ico (favicon file)
-       */
-      '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-    ],
-  }
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
+};
 
 export async function middleware(request: NextRequest) {
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
@@ -27,5 +27,5 @@ export async function middleware(request: NextRequest) {
   // If this is not done, you may be causing the browser and server to go out
   // of sync and terminate the user's session prematurely!
 
-  return await updateSession(request)
+  return await updateSession(request);
 }
