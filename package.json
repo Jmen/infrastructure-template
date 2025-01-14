@@ -1,5 +1,5 @@
 {
-  "name": "hello-infrastructure-template",
+  "name": "infrastructure-template",
   "version": "0.1.0",
   "private": true,
   "scripts": {
