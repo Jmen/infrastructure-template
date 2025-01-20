@@ -1,10 +1,10 @@
 # 🏗️ Infrastructure Template
 
-This is an opinionated GitHub Repository Template for a full-stack web application, based around Supabase and Vercel
+This is an opinionated GitHub Repository Template for a Production Ready full-stack web application, based around Supabase and Vercel
 
 It sets up a Website, API, Database (with migrations), Authentication (with Social Login), CI Pipeline, and web hosting.
 
-There is support for developing locally using Docker, and the CI Pipeline deploys to a Test and Production environment
+There is also support for developing locally using Docker, and the CI Pipeline deploys to a Test and Production environment
 
 This is a starting point that you can use to build the pages, endpoints, and database tables which are unique to your application.
 
@@ -54,3 +54,29 @@ No credit card is required to get started, and the free tier should be sufficien
 The development environment is configured to be as close to production as possible, while still being able to run on a local machine without needing an internet connection.
 
 This also helps with trunk based development, as the more testing that can be done locally, the less likely it is that a bug will be introduced before pushing to the main branch.
+
+### Acceptance Testing
+
+The setup is designed to support ATDD - Acceptance Test Driven Development, otherwise known as Outside-In TDD, or Double Loop TDD
+
+The technique can be read about in depth in the book [Growing Object Orientated Software Guided by Tests](http://www.growing-object-oriented-software.com) 
+
+The structure of the tests follows a 3 layer approach of Scenarios, a Domain Specific Language and Protocol Drivers
+
+See this video for an overview of the structure of the layers - https://www.youtube.com/watch?v=JDD5EEJgpHU
+
+#### Scenarios
+
+These are the tests which implement the requirements specification of each Use Case, without referring to any implementation details
+
+#### DSL - Domain Specific Language
+
+This is a layer of objects which represents the interactions that can be performed on the application, and used by the tests to build scenarios
+
+#### Protocol Drivers
+
+This is the layer which actually talks to the real system under test and converts the DSL interactions into the protocol required.
+
+This project implements two types of drivers, Web UI with Playwright, and an API driver with Fetch. 
+
+The pipeline runs both of these sets of tests in parallel, and means that the same tests can be run at two levels of abstract, to isolate issues between the Web UI and the API backend.
