@@ -22,10 +22,6 @@ export class PlaywrightWebDriver implements ITestDriver {
 
         await page.waitForLoadState("networkidle");
 
-        await page.goto("/account");
-
-        await page.waitForLoadState("networkidle");
-
         await expect(page.getByText(email)).toBeVisible();
 
         return { page };
@@ -41,10 +37,6 @@ export class PlaywrightWebDriver implements ITestDriver {
         await page.getByLabel(/email/i).fill(email);
         await page.getByLabel(/password/i).fill(password);
         await page.getByRole("button", { name: /sign in/i }).click();
-
-        await page.waitForLoadState("networkidle");
-
-        await page.goto("/account");
 
         await page.waitForLoadState("networkidle");
 
