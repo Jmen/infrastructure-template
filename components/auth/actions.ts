@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/clients/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { logger } from "@/lib/logger";
 
 export const redirectIfNotLoggedIn = async () => {
   const supabase = await createClient();
@@ -12,7 +13,7 @@ export const redirectIfNotLoggedIn = async () => {
     error,
   } = await supabase.auth.getUser();
   if (error || !user) {
-    console.error(error);
+    logger.error({ error }, "Failed to get user");
     redirect("/");
   }
 };

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { DebouncedButton } from "../debouncedButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/clients/client";
+import { logger } from "@/lib/logger";
 
 const schema = z.object({
   username: z
@@ -83,7 +84,7 @@ export function ProfileForm() {
         setSuccess(false);
       }, 2000);
     } catch (error) {
-      console.error(error);
+      logger.error({ error }, "Failed to update profile");
       setError("An unexpected error occurred");
     }
   }

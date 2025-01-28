@@ -1,6 +1,7 @@
 import { signInAction } from "@/components/auth/actions";
 import { ok, badRequest, internalServerError } from "../../apiResponse";
 import { withErrorHandler } from "../../handlers";
+import { logger } from "@/lib/logger";
 
 export const POST = withErrorHandler(async (request: Request) => {
   const { email, password } = await request.json();
@@ -12,7 +13,7 @@ export const POST = withErrorHandler(async (request: Request) => {
   }
 
   if (!result.session?.access_token || !result.session?.refresh_token) {
-    console.error("Failed to create session");
+    logger.error({ result, email }, "Failed to create session");
     return internalServerError();
   }
 

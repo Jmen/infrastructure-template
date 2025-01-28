@@ -10,6 +10,7 @@ import { useState } from "react";
 import { DebouncedButton } from "../debouncedButton";
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "../ui/card";
+import { logger } from "@/lib/logger";
 
 const formSchema = z.object({
   email: z
@@ -45,7 +46,7 @@ export function RegisterForm() {
         router.push("/account");
       }
     } catch (error) {
-      console.error("Error during registration:", error);
+      logger.error({ error }, "Error during registration");
       setError("An unexpected error occurred");
     }
   }

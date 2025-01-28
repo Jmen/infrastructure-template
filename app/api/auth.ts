@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/clients/server";
+import { logger } from "@/lib/logger";
 
 export async function getTokens(request: NextRequest) {
   const authHeader = request.headers.get("Authorization");
@@ -32,12 +33,12 @@ export async function getUserId(accessToken: string, refreshToken: string) {
   } = await supabase.auth.getUser();
 
   if (error) {
-    console.error(error);
+    logger.error({ error }, "Failed to get user");
     return { error: { code: error.code, message: error.message } };
   }
 
   if (!user?.id) {
-    console.error("User not found");
+    logger.error({ user }, "User not found");
     return { error: { code: "user_not_found", message: "User not found" } };
   }
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { internalServerError, unauthorised } from "./apiResponse";
 import { getTokens, getUserId } from "./auth";
+import { logger } from "@/lib/logger";
 
 export interface AuthContext {
   accessToken: string;
@@ -18,7 +19,7 @@ export function withErrorHandler(handler: Handler) {
     try {
       return await handler(req);
     } catch (error) {
-      console.error("Unhandled API error:", error);
+      logger.error({ error }, "Unhandled API error");
       return internalServerError();
     }
   };
@@ -35,16 +36,17 @@ export function withAuth(handler: AuthHandler) {
     const { userId, client: supabase, error: userError } = await getUserId(accessToken, refreshToken);
 
     if (userError) {
+      logger.error({ userError }, "Invalid token");
       return unauthorised("invalid token");
     }
 
     if (!userId) {
-      console.error("Error getting userId");
+      logger.error({}, "Error getting userId");
       return internalServerError();
     }
 
     if (!supabase) {
-      console.error("Error creating supabase client");
+      logger.error({}, "Error creating supabase client");
       return internalServerError();
     }
 

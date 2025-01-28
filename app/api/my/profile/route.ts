@@ -1,13 +1,14 @@
 import { NextRequest } from "next/server";
 import { ok, badRequest, internalServerError } from "@/app/api/apiResponse";
 import { withAuth, withErrorHandler } from "@/app/api/handlers";
+import { logger } from "@/lib/logger";
 
 export const GET = withErrorHandler(
   withAuth(async (request: NextRequest, { userId, supabase }) => {
     const { data, error } = await supabase.from("profiles").select("*").eq("user_id", userId).limit(1);
 
     if (error) {
-      console.error(error);
+      logger.error({ error }, "Failed to get profile");
       return internalServerError();
     }
 
@@ -32,7 +33,7 @@ export const POST = withErrorHandler(
     const { data, error } = await supabase.from("profiles").upsert({ user_id: userId, username }).select().single();
 
     if (error) {
-      console.error(error);
+      logger.error({ error }, "Failed to update profile");
       return internalServerError();
     }
 

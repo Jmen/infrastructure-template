@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
@@ -15,7 +16,7 @@ export const createClient = async () => {
             cookieStore.set(name, value, options);
           });
         } catch (error) {
-          console.log("setting cookies failed", error);
+          logger.error({ error }, "setting cookies failed");
           // The `set` method was called from a Server Component.
           // This can be ignored if you have middleware refreshing
           // user sessions.
