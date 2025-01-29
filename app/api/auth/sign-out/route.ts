@@ -1,19 +1,16 @@
 import { signOutAction } from "@/components/auth/actions";
-import { ok, unauthorised, badRequest } from "../../apiResponse";
+import { ok, badRequest } from "../../apiResponse";
+import { withAuth, withErrorHandler } from "../../handlers";
+import { NextRequest } from "next/server";
 
-export async function POST(request: Request) {
-  const authHeader = request.headers.get("Authorization");
+export const POST = withErrorHandler(
+  withAuth(async (_: NextRequest, { supabase }) => {
+    const result = await signOutAction(supabase);
 
-  if (!authHeader?.startsWith("Bearer ")) {
-    return unauthorised();
-  }
+    if (result?.error) {
+      return badRequest(result.error.code, result.error.message);
+    }
 
-  const token = authHeader.split(" ")[1];
-  const result = await signOutAction(token);
-
-  if (result?.error) {
-    return badRequest(result.error.code, result.error.message);
-  }
-
-  return ok({ success: true });
-}
+    return ok({ success: true });
+  }),
+);

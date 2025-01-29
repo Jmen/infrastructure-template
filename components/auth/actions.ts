@@ -1,9 +1,9 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/clients/server";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { logger } from "@/lib/logger";
 
 export const redirectIfNotLoggedIn = async () => {
   const supabase = await createClient();
@@ -13,7 +13,6 @@ export const redirectIfNotLoggedIn = async () => {
     error,
   } = await supabase.auth.getUser();
   if (error || !user) {
-    logger.error({ error }, "Failed to get user");
     redirect("/");
   }
 };
@@ -65,14 +64,10 @@ export const signInAction = async (email: string, password: string) => {
   };
 };
 
-export const signOutAction = async (token?: string) => {
-  const supabase = await createClient();
+export const signOutAction = async (supabase?: SupabaseClient) => {
+  const supabaseClient = supabase || (await createClient());
 
-  if (token) {
-    await supabase.auth.setSession({ access_token: token, refresh_token: "" });
-  }
-
-  const { error } = await supabase.auth.signOut();
+  const { error } = await supabaseClient.auth.signOut();
   if (error) {
     return { error: { code: error.code, message: error.message } };
   }
@@ -80,18 +75,10 @@ export const signOutAction = async (token?: string) => {
   return { success: true };
 };
 
-// TODO: what if user is able to pass null values?
-export const resetPasswordAction = async (newPassword: string, token?: string, refreshToken?: string) => {
-  const supabase = await createClient();
+export const resetPasswordAction = async (newPassword: string, supabase?: SupabaseClient) => {
+  const supabaseClient = supabase || (await createClient());
 
-  if (token && refreshToken) {
-    await supabase.auth.setSession({
-      access_token: token,
-      refresh_token: refreshToken,
-    });
-  }
-
-  const { error } = await supabase.auth.updateUser({
+  const { error } = await supabaseClient.auth.updateUser({
     password: newPassword,
   });
 

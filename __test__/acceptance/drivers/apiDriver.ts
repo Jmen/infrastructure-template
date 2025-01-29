@@ -79,6 +79,7 @@ export class ApiDriver implements ITestDriver {
         method: "POST",
         headers: {
           Authorization: `Bearer ${context.accessToken}`,
+          "X-Refresh-Token": context.refreshToken || "",
         },
       });
 

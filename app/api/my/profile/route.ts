@@ -2,41 +2,35 @@ import { NextRequest } from "next/server";
 import { ok, badRequest, internalServerError } from "@/app/api/apiResponse";
 import { withAuth, withErrorHandler } from "@/app/api/handlers";
 import { logger } from "@/lib/logger";
+import { getProfileAction, updateProfileAction } from "@/components/profile/actions";
 
 export const GET = withErrorHandler(
-  withAuth(async (request: NextRequest, { userId, supabase }) => {
-    const { data, error } = await supabase.from("profiles").select("*").eq("user_id", userId).limit(1);
+  withAuth(async (request: NextRequest, { supabase }) => {
+    const result = await getProfileAction(supabase);
 
-    if (error) {
-      logger.error({ error }, "Failed to get profile");
+    if (result.error) {
+      logger.error({ error: result.error }, "Failed to get profile");
       return internalServerError();
     }
 
-    if (data?.length === 0) {
-      return ok({ username: "" });
-    }
-
-    return ok(data[0]);
+    return ok(result.data);
   }),
 );
 
 export const POST = withErrorHandler(
-  withAuth(async (request: NextRequest, { userId, supabase }) => {
-    const body = await request.json();
-
-    const { username } = body;
+  withAuth(async (request: NextRequest, { supabase }) => {
+    const { username } = await request.json();
 
     if (!username) {
       return badRequest("username_is_required", "username not found in request body");
     }
 
-    const { data, error } = await supabase.from("profiles").upsert({ user_id: userId, username }).select().single();
+    const result = await updateProfileAction(username, supabase);
 
-    if (error) {
-      logger.error({ error }, "Failed to update profile");
-      return internalServerError();
+    if (result?.error) {
+      return badRequest(result.error.code, result.error.message);
     }
 
-    return ok({ username: data.username });
+    return ok({ username: result.data.username });
   }),
 );

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DebouncedButton } from "../debouncedButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { createClient } from "@/lib/supabase/clients/client";
+import { getProfileAction, updateProfileAction } from "./actions";
 import { logger } from "@/lib/logger";
 
 const schema = z.object({
@@ -23,70 +23,37 @@ export function ProfileForm() {
   const [username, setUsername] = useState("Loading...");
 
   useEffect(() => {
-    const supabase = createClient();
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      fetch("/api/my/profile", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${session?.access_token}`,
-          "X-Refresh-Token": session?.refresh_token || "",
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((body) => {
-          if (body.error) {
-            setError(body.error);
-            return;
-          }
-          setUsername(body.data.username || "");
-          setIsLoading(false);
-        })
-        .catch(() => setError("Failed to load profile"));
+    getProfileAction().then((result) => {
+      if (result.error) {
+        logger.error("Failed to load profile", { error: result.error });
+        setError(result.error.message);
+        return;
+      }
+      setUsername(result.data.username || "");
+      setIsLoading(false);
     });
   }, []);
 
   async function onSubmit() {
-    const result = schema.safeParse({ username });
-    if (!result.success) {
-      setError(result.error.errors[0].message);
+    const parsed = schema.safeParse({ username });
+    if (!parsed.success) {
+      setError(parsed.error.errors[0].message);
       return;
     }
 
-    const supabase = createClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
+    const result = await updateProfileAction(username);
 
-    try {
-      const response = await fetch("/api/my/profile", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${session?.access_token}`,
-          "X-Refresh-Token": session?.refresh_token || "",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username }),
-      });
-
-      const body = await response.json();
-
-      if (body.error) {
-        setError(body.error);
-        return;
-      }
-
-      setError(null);
-      setSuccess(true);
-
-      setTimeout(() => {
-        setSuccess(false);
-      }, 2000);
-    } catch (error) {
-      logger.error({ error }, "Failed to update profile");
-      setError("An unexpected error occurred");
+    if (result.error) {
+      setError(result.error.message);
+      return;
     }
+
+    setError(null);
+    setSuccess(true);
+
+    setTimeout(() => {
+      setSuccess(false);
+    }, 2000);
   }
 
   return (
